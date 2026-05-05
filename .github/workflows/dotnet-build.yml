@@ -1,20 +1,51 @@
-# .github/workflows/dotnet-build.yml
-name: .NET Build
+name: PR Validation
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "Buggernaut/**"
+      - ".github/workflows/**"
+
+concurrency:
+  group: pr-validation-${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  validate:
+    name: Build and test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Buggernaut
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Buggernaut.sln
+
       - name: Build
-        run: dotnet build --configuration Release
+        run: dotnet build Buggernaut.sln --configuration Release --no-restore
+
+      - name: Test
+        run: >
+          dotnet test Buggernaut.sln
+          --configuration Release
+          --no-build
+          --logger "trx;LogFileName=test-results.trx"
+          --collect:"XPlat Code Coverage"
+
+      - name: Upload test and coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-test-results
+          path: Buggernaut/**/TestResults/**
+          if-no-files-found: warn
