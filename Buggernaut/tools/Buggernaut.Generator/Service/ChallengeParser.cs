@@ -4,8 +4,14 @@ namespace Buggernaut.Generator;
 
 public class ChallengeParser
 {
+    private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
+    
     public static Challenge Parse(string json)
     {
-        return JsonSerializer.Deserialize<Challenge>(json);
+        // Ibland genererar Gemini markdown trots instruktioner
+        var clean = json.Replace("```json", "").Replace("```", "");
+        
+        return JsonSerializer.Deserialize<Challenge>(json)
+               ?? throw new Exception("Kunde inte parsea Geminis svar till en utmaning.");
     }
 }
