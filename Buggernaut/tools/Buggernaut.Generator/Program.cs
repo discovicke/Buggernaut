@@ -18,8 +18,19 @@ class Program
         }
 
         var client = new GeminiClient(apiKey);
-        var response = await client.GenerateAsync("Vilken fågel är bäst och varför är det ankor?");
+        var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.Bug, Difficulties.Easy);
+        var raw = await client.GenerateAsync(prompt);
 
-        Console.WriteLine(response);
+        Console.WriteLine("=== RAW ===");
+        Console.WriteLine(raw);
+
+        var challenge = ChallengeParser.Parse(raw);
+
+        Console.WriteLine($"\n=== {challenge.Title} ===");
+        Console.WriteLine(challenge.Description);
+        Console.WriteLine("\n--- Buggy Code ---");
+        Console.WriteLine(challenge.BuggyCode);
+        Console.WriteLine("\n--- Hint ---");
+        Console.WriteLine(challenge.Hint);
     }
 }
