@@ -12,6 +12,10 @@ public class GeminiClient(string apiKey)
 
         var body = new
         {
+            system_instruction = new
+            {
+                parts = new[] { new { text = PromptBuilder.SystemPrompt } }
+            },
             contents = new[]
             {
                 new { parts = new[] { new { text = prompt } } }
