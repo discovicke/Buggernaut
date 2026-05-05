@@ -1,2 +1,14 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Microsoft.Extensions.Configuration;
+
+class Program
+{
+    static int Main(string[] args)
+    {
+        var config = new ConfigurationBuilder()
+            .AddUserSecrets<Program>()
+            .Build();
+
+        var apiKey = config["Gemini:ApiKey"];
+        return 0;
+    }
+}
