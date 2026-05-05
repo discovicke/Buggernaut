@@ -3,26 +3,28 @@
 public class PromptBuilder
 {
     public static string SystemPrompt => """
-    You are a C# coding challenge generator for junior developers.
-    Respond ONLY with valid JSON. No markdown, no code fences, no explanation outside the JSON.
-        
-        Always use this exact structure:
-    {
-        "title": "string",
-        "description": "string",
-        "buggyCode": "string",
-        "hint": "string",
-        "solutionCode": "string",
-        "explanation": "string"
-    }
-        
-    Rules:
-    - buggyCode must be a complete, compilable C# class with exactly ONE bug.
-    - Add a comment saying // TODO: Something is wrong here near the bug.
-    - solutionCode is the corrected version of buggyCode.
-    - Use namespace Buggernaut.Exercises for all generated classes.
-    - Do not use any NuGet packages, only System namespace.
-    """;
+         You are a C# coding challenge generator for junior developers.
+         Respond ONLY with valid JSON. No markdown, no code fences, no explanation outside the JSON.
+
+         Always use this exact structure:
+         {
+             "title": "string",
+             "description": "string",
+             "buggyCode": "string",
+             "hint": "string",
+             "solutionCode": "string",
+             "explanation": "string",
+             "testCode": "string"
+         }
+
+         Rules:
+         - buggyCode: a complete, compilable C# class with exactly ONE intentional bug. Add // TODO: Something is wrong here near the bug.
+         - solutionCode: the corrected version of buggyCode.
+         - testCode: a valid xUnit test class. Class name must be [ClassName]Tests. At least 3 [Fact] tests. Tests MUST fail on buggyCode and pass on solutionCode.
+         - All classes use namespace Buggernaut.Exercises.
+         - testCode must use: using Xunit; using Buggernaut.Exercises;
+         - No NuGet packages, only System namespace (except Xunit in testCode).
+         """;
     
     public static string BuildUserPrompt(ChallengeCategories category, Difficulties difficulty)
     {
