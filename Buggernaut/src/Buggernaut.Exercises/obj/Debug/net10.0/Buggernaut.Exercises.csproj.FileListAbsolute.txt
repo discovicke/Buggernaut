@@ -1,0 +1,12 @@
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\bin\Debug\net10.0\Buggernaut.Exercises.deps.json
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\bin\Debug\net10.0\Buggernaut.Exercises.dll
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\bin\Debug\net10.0\Buggernaut.Exercises.pdb
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.GeneratedMSBuildEditorConfig.editorconfig
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.AssemblyInfoInputs.cache
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.AssemblyInfo.cs
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.csproj.CoreCompileInputs.cache
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.sourcelink.json
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.dll
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\refint\Buggernaut.Exercises.dll
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\Buggernaut.Exercises.pdb
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\src\Buggernaut.Exercises\obj\Debug\net10.0\ref\Buggernaut.Exercises.dll

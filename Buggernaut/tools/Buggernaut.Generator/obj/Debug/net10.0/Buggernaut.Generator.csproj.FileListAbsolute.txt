@@ -1,0 +1,15 @@
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\bin\Debug\net10.0\Buggernaut.Generator.exe
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\bin\Debug\net10.0\Buggernaut.Generator.deps.json
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\bin\Debug\net10.0\Buggernaut.Generator.runtimeconfig.json
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\bin\Debug\net10.0\Buggernaut.Generator.dll
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\bin\Debug\net10.0\Buggernaut.Generator.pdb
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.GeneratedMSBuildEditorConfig.editorconfig
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.AssemblyInfoInputs.cache
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.AssemblyInfo.cs
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.csproj.CoreCompileInputs.cache
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.sourcelink.json
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.dll
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\refint\Buggernaut.Generator.dll
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.pdb
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\Buggernaut.Generator.genruntimeconfig.cache
+V:\dev\repos\net25-kurs-5-valfri-discovicke\Buggernaut\tools\Buggernaut.Generator\obj\Debug\net10.0\ref\Buggernaut.Generator.dll
