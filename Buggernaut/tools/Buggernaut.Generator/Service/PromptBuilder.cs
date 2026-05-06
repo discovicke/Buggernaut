@@ -32,14 +32,15 @@ public class PromptBuilder
     {
         var categoryDescription = category switch
         {
-            ChallengeCategories.Bug           => "a method with an intentional bug to fix",
-            ChallengeCategories.GuessOutput   => "a snippet where the user must predict the console output",
-            ChallengeCategories.FillInTheGap  => "a method with a missing implementation the user must complete",
+            ChallengeCategories.Bug             => "a method with an intentional bug to fix",
+            ChallengeCategories.GuessOutput     => "a snippet where the user must predict the console output",
+            ChallengeCategories.FillInTheGap    => "a method with a missing implementation the user must complete",
             ChallengeCategories.AlgorithmRiddle => "a small algorithm puzzle",
-            ChallengeCategories.LINQ          => "a broken or incomplete LINQ query",
-            ChallengeCategories.BlackBox      => "a method the user must reverse-engineer from its tests",
-            ChallengeCategories.LogTime       => "a method the user must improve time- and log time from existing algorithm",
-            _ => "a general C# challenge"
+            ChallengeCategories.LINQ            => "a broken or incomplete LINQ query",
+            ChallengeCategories.BlackBox        => "a method the user must reverse-engineer from its tests",
+            ChallengeCategories.LogTime         => "a method the user must improve time- and log time from existing algorithm",
+            ChallengeCategories.General         => "a general C# challenge",
+            _                                   => "a general C# challenge"
         };
         
         return $"Generate a C# challenge for {difficulty} difficulty. The challenge should be {categoryDescription}.";

@@ -9,4 +9,5 @@ public enum ChallengeCategories
     LINQ,
     BlackBox,
     LogTime,
+    General,
 }

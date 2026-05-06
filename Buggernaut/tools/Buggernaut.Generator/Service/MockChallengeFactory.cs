@@ -27,7 +27,8 @@ public static class MockChallengeFactory
             ChallengeCategories.LINQ            => Linq(difficulty),
             ChallengeCategories.BlackBox        => BlackBox(difficulty),
             ChallengeCategories.LogTime         => LogTime(difficulty),
-            _                                   => Bug(difficulty)
+            ChallengeCategories.General         => General(difficulty),
+            _                                   => General(difficulty)
         };
 
         return new Challenge
@@ -184,6 +185,22 @@ public static class MockChallengeFactory
     );
     
     private static Template LogTime(Difficulties d) => new(
+        ClassName: " ",
+        Description: $" ",
+        BuggyCode: """
+
+                   """,
+        Hint: " ",
+        SolutionCode: """
+
+                      """,
+        Explanation: " ",
+        TestCode: """
+
+                  """
+    );
+    
+    private static Template General(Difficulties d) => new(
         ClassName: " ",
         Description: $" ",
         BuggyCode: """
