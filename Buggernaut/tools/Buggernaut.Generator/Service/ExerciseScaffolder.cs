@@ -35,9 +35,9 @@ public class ExerciseScaffolder
         File.WriteAllText(testPath, challenge.TestCode);
         File.WriteAllText(solutionPath, challenge.SolutionCode);
 
-        Console.WriteLine($"\n Övning skapad: {className}");
-        Console.WriteLine($"   Öppna:     src/Buggernaut.Exercises/{className}.cs");
-        Console.WriteLine($"   Testa med: dotnet test");
+        Console.WriteLine($"\nÖvning skapad: {className}");
+        Console.WriteLine($"\tÖppna:\tsrc/Buggernaut.Exercises/{className}.cs");
+        Console.WriteLine($"\tTesta med: dotnet test");
     }
 
     /// <summary>
