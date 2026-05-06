@@ -38,6 +38,7 @@ public class PromptBuilder
             ChallengeCategories.AlgorithmRiddle => "a small algorithm puzzle",
             ChallengeCategories.LINQ          => "a broken or incomplete LINQ query",
             ChallengeCategories.BlackBox      => "a method the user must reverse-engineer from its tests",
+            ChallengeCategories.LogTime       => "a method the user must improve time- and log time from existing algorithm",
             _ => "a general C# challenge"
         };
         
