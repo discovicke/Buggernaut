@@ -1,8 +1,15 @@
 ﻿namespace Buggernaut.Generator;
 
-public class ExcerciseScaffolder(string rootPath)
+public class ExerciseScaffolder
 {
-    private readonly string _rootPath = rootPath;
+    private readonly string _solutionRoot;
+
+    public ExerciseScaffolder()
+    {
+        _solutionRoot = Path.GetFullPath(
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..")
+        );
+    }
 
     public void Scaffold(Challenge challenge)
     {
