@@ -12,6 +12,7 @@ public static class CliArgumentParser
     {
         public ChallengeCategories Category { get; set; } = ChallengeCategories.Bug;
         public Difficulties Difficulty { get; set; } = Difficulties.Medium;
+        public bool DryRun { get; set; } = false;
     }
 
     public static GenerateOptions Parse(string[] args)
@@ -41,6 +42,10 @@ public static class CliArgumentParser
 
                 var difficultyValue = args[++i];
                 options.Difficulty = ParseDifficulty(difficultyValue);
+            }
+            else if (args[i] == "--dry-run" || args[i] == "-dr")
+            {
+                options.DryRun = true;
             }
             else if (args[i] == "--list" || args[i] == "-l")
             {
@@ -100,6 +105,7 @@ public static class CliArgumentParser
         help.AppendLine("Flaggor:");
         help.AppendLine("  --category,\t-c <category>\tTyp av övning");
         help.AppendLine("  --difficulty,\t-d <difficulty>\tSvårighetsgrad (standard: Medium)");
+        help.AppendLine("  --dry-run,\t-dr\t\tGenerera en lokal mock-övning (ingen API-nyckel krävs)");
         help.AppendLine("  --list,\t-l\t\tVisa tillgängliga kategorier och svårighetsgrader");
         help.AppendLine("  --help,\t-h\t\tVisa denna hjälptexten\n");
         help.AppendLine("Tillgängliga kategorier:");
@@ -112,6 +118,7 @@ public static class CliArgumentParser
         help.AppendLine("  dotnet run -- generate");
         help.AppendLine("  dotnet run -- generate --category Bug --difficulty Hard");
         help.AppendLine("  dotnet run -- generate -c LINQ -d Easy");
+        help.AppendLine("  dotnet run -- generate --dry-run --category AlgorithmRiddle");
         help.AppendLine("  dotnet run -- generate --list");
 
         Console.WriteLine(help);

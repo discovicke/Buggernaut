@@ -25,6 +25,23 @@ class Program
             .AddUserSecrets<Program>()
             .Build();
 
+        if (options.DryRun)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"\n[DRY-RUN] Genererar mock-övning för {options.Category} ({options.Difficulty})...");
+            Console.ResetColor();
+
+            var mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Mock-övning skapad: \"{mock.Title}\"");
+            Console.ResetColor();
+
+            var dryScaffolder = new ExerciseScaffolder();
+            dryScaffolder.Scaffold(mock);
+            return;
+        }
+
         var apiKey = config["Gemini:ApiKey"];
 
         if (string.IsNullOrEmpty(apiKey))
