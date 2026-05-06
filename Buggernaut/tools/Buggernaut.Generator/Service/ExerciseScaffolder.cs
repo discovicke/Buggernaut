@@ -13,20 +13,36 @@ public class ExerciseScaffolder
     
     public void Scaffold(Challenge challenge)
     {
-        var exercisePath = Path.Combine(_rootPath, "src", "Exercises", challenge.Title);
-        var testPath = Path.Combine(_rootPath, "tests", challenge.Title);
-        var solutionPath = Path.Combine(_rootPath, "src", "Solutions", challenge.Title);
-        
-        Directory.CreateDirectory(exercisePath);
-        Directory.CreateDirectory(testPath);
-        Directory.CreateDirectory(solutionPath);
-        
+        var className = ExtractClassName(challenge.BuggyCode);
+
+        var exercisePath = Path.Combine(_solutionRoot, "src", "Buggernaut.Exercises", $"{className}.cs");
+        var testPath     = Path.Combine(_solutionRoot, "tests", "Buggernaut.Tests", $"{className}Tests.cs");
+        var solutionPath = Path.Combine(_solutionRoot, "solutions", $"{className}.cs");
+
+        Directory.CreateDirectory(Path.GetDirectoryName(exercisePath)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(solutionPath)!);
+
         File.WriteAllText(exercisePath, challenge.BuggyCode);
         File.WriteAllText(testPath,     challenge.TestCode);
         File.WriteAllText(solutionPath, challenge.SolutionCode);
 
-        Console.WriteLine($"\n Övning skapad: {challenge.Title}");
-        Console.WriteLine($"   Öppna:     src/Buggernaut.Exercises/{challenge.Title}.cs");
+        Console.WriteLine($"\n Övning skapad: {className}");
+        Console.WriteLine($"   Öppna:     src/Buggernaut.Exercises/{className}.cs");
         Console.WriteLine($"   Testa med: dotnet test");
+    }
+
+    /// <summary>
+    /// Regex-metod som letar efter klassnamnet i buggyCode.
+    /// T.ex. "public class Foo" eller "public static class Bar"
+    /// </summary>
+    private string ExtractClassName(string code)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(
+            code, @"public\s+(static\s+)?class\s+(\w+)"
+        );
+        return match.Success 
+            ? match.Groups[2].Value 
+            : "UnknownExercise";
     }
 }
