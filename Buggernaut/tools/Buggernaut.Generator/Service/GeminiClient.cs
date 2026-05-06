@@ -7,18 +7,21 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 {
     private static readonly HttpStatusCode[] RetryableStatusCodes =
     [
-        HttpStatusCode.TooManyRequests,       // 429 rate limit
-        HttpStatusCode.ServiceUnavailable,    // 503 overloaded / maintenance
-        HttpStatusCode.BadGateway,            // 502
-        HttpStatusCode.GatewayTimeout,        // 504
-        HttpStatusCode.InternalServerError    // 500 transient serverfel
+        HttpStatusCode.TooManyRequests, // 429 rate limit
+        HttpStatusCode.ServiceUnavailable, // 503 overloaded / maintenance
+        HttpStatusCode.BadGateway, // 502
+        HttpStatusCode.GatewayTimeout, // 504
+        HttpStatusCode.InternalServerError // 500 transient serverfel
     ];
 
     private readonly HttpClient _http = new();
 
     public async Task<string> GenerateAsync(string prompt)
     {
-        var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+        var threeUrl =
+            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key={apiKey}";
+        var twoFiveUrl =
+            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
 
         var body = new
         {
@@ -37,7 +40,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
         for (int attempt = 1; attempt <= maxAttempts; attempt++)
         {
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = await _http.PostAsync(url, content);
+            var response = await _http.PostAsync(twoFiveUrl, content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -94,7 +97,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
         }
 
         var baseDelay = Math.Min(5 * Math.Pow(2, attempt - 1), 120);
-        var jitter = Random.Shared.NextDouble() * 2; 
+        var jitter = Random.Shared.NextDouble() * 2;
         return baseDelay + jitter;
     }
 
@@ -102,10 +105,10 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
     {
         var (color, label) = statusCode switch
         {
-            429 => (ConsoleColor.Yellow,  "Rate limit"),
-            503 => (ConsoleColor.Cyan,    "Tjänsten otillgänglig"),
+            429 => (ConsoleColor.Yellow, "Rate limit"),
+            503 => (ConsoleColor.Cyan, "Tjänsten otillgänglig"),
             500 => (ConsoleColor.Magenta, "Serverfel"),
-            _   => (ConsoleColor.DarkYellow, $"HTTP {statusCode}")
+            _ => (ConsoleColor.DarkYellow, $"HTTP {statusCode}")
         };
 
         Console.ForegroundColor = color;
@@ -122,6 +125,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
             await Task.Delay(TimeSpan.FromSeconds(1));
             remaining--;
         }
-        Console.Write("\r" + new string(' ', 30) + "\r"); 
+
+        Console.Write("\r" + new string(' ', 30) + "\r");
     }
 }
