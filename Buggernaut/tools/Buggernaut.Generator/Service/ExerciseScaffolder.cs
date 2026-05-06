@@ -2,21 +2,29 @@
 
 public class ExerciseScaffolder
 {
-    private readonly string _solutionRoot;
+    private readonly string _solutionRoot = FindSolutionRoot();
 
-    public ExerciseScaffolder()
+    private static string FindSolutionRoot()
     {
-        _solutionRoot = Path.GetFullPath(
-            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..")
-        );
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+
+        while (dir != null)
+        {
+            if (dir.GetFiles("*.sln").Length > 0)
+                return dir.FullName;
+
+            dir = dir.Parent;
+        }
+
+        throw new Exception("Kunde inte hitta solution-rooten. Finns det en .sln-fil i Buggernaut/?");
     }
-    
+
     public void Scaffold(Challenge challenge)
     {
         var className = ExtractClassName(challenge.BuggyCode);
 
         var exercisePath = Path.Combine(_solutionRoot, "src", "Buggernaut.Exercises", $"{className}.cs");
-        var testPath     = Path.Combine(_solutionRoot, "tests", "Buggernaut.Tests", $"{className}Tests.cs");
+        var testPath = Path.Combine(_solutionRoot, "tests", "Buggernaut.Tests", $"{className}Tests.cs");
         var solutionPath = Path.Combine(_solutionRoot, "solutions", $"{className}.cs");
 
         Directory.CreateDirectory(Path.GetDirectoryName(exercisePath)!);
@@ -24,7 +32,7 @@ public class ExerciseScaffolder
         Directory.CreateDirectory(Path.GetDirectoryName(solutionPath)!);
 
         File.WriteAllText(exercisePath, challenge.BuggyCode);
-        File.WriteAllText(testPath,     challenge.TestCode);
+        File.WriteAllText(testPath, challenge.TestCode);
         File.WriteAllText(solutionPath, challenge.SolutionCode);
 
         Console.WriteLine($"\n Övning skapad: {className}");
@@ -41,8 +49,8 @@ public class ExerciseScaffolder
         var match = System.Text.RegularExpressions.Regex.Match(
             code, @"public\s+(static\s+)?class\s+(\w+)"
         );
-        return match.Success 
-            ? match.Groups[2].Value 
+        return match.Success
+            ? match.Groups[2].Value
             : "UnknownExercise";
     }
 }
