@@ -7,11 +7,11 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 {
     private static readonly HttpStatusCode[] RetryableStatusCodes =
     [
-        HttpStatusCode.TooManyRequests, // 429 rate limit
-        HttpStatusCode.ServiceUnavailable, // 503 overloaded / maintenance
-        HttpStatusCode.BadGateway, // 502
-        HttpStatusCode.GatewayTimeout, // 504
-        HttpStatusCode.InternalServerError // 500 transient serverfel
+        HttpStatusCode.TooManyRequests,
+        HttpStatusCode.ServiceUnavailable,
+        HttpStatusCode.BadGateway,
+        HttpStatusCode.GatewayTimeout,
+        HttpStatusCode.InternalServerError
     ];
 
     private readonly HttpClient _http = new();
@@ -40,7 +40,15 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
         for (int attempt = 1; attempt <= maxAttempts; attempt++)
         {
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = await _http.PostAsync(twoFiveUrl, content);
+
+            HttpResponseMessage response;
+            var apiTail = $"Anropar Gemini  –  försök {attempt}/{maxAttempts}";
+            using (var apiSpinner = new Spinner("Väntar på API", apiTail))
+            {
+                response = await _http.PostAsync(twoFiveUrl, content);
+                apiSpinner.Stop(success: response.IsSuccessStatusCode);
+            }
+            Console.WriteLine();
 
             if (response.IsSuccessStatusCode)
             {
@@ -54,9 +62,8 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
                     .GetProperty("text").GetString() ?? "";
             }
 
-            // Terminal errors, retry kommer inte hjälpa
             if (response.StatusCode == HttpStatusCode.Unauthorized)
-                throw new Exception($"401 Unauthorized – kontrollera din API-nyckel.");
+                throw new Exception("401 Unauthorized – kontrollera din API-nyckel.");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -70,11 +77,20 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
                 throw new Exception($"HTTP {(int)response.StatusCode} – kan inte återförsöka: {errorBody}");
             }
 
-            // Retryable error – lista ut hur länge du måste vänta och försök igen
             var waitSeconds = GetWaitSeconds(response, attempt);
+            var label = response.StatusCode switch
+            {
+                HttpStatusCode.TooManyRequests => "Rate limit",
+                HttpStatusCode.ServiceUnavailable => "Tjänsten otillgänglig",
+                HttpStatusCode.InternalServerError => "Serverfel",
+                _ => $"HTTP {(int)response.StatusCode}"
+            };
 
-            PrintRetryWarning((int)response.StatusCode, attempt, maxAttempts, waitSeconds);
-            await WaitWithCountdown(waitSeconds);
+            var retryMessage =
+                $"{label} ({(int)response.StatusCode})  –  försök {attempt}/{maxAttempts}  –  väntar {waitSeconds:F0} s";
+
+            await WaitWithSpinner("Väntar på API", retryMessage, waitSeconds);
+            Console.WriteLine();
         }
 
         throw new Exception($"Lyckades inte generera Gemini-respons efter {maxAttempts} försök.");
@@ -82,7 +98,6 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 
     private static double GetWaitSeconds(HttpResponseMessage response, int attempt)
     {
-        // Respect Retry-After header (value can be seconds or an HTTP-date)
         if (response.Headers.RetryAfter is { } retryAfter)
         {
             if (retryAfter.Delta is { } delta)
@@ -101,30 +116,19 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
         return baseDelay + jitter;
     }
 
-    private static void PrintRetryWarning(int statusCode, int attempt, int maxAttempts, double waitSeconds)
-    {
-        var label = statusCode switch
-        {
-            429 => "Rate limit",
-            503 => "Tjänsten otillgänglig",
-            500 => "Serverfel",
-            _   => $"HTTP {statusCode}"
-        };
-
-        Printer.Warn($"{label} ({statusCode})  –  försök {attempt}/{maxAttempts}  –  väntar {waitSeconds:F0} s", indent: 1);
-    }
-
-    private static async Task WaitWithCountdown(double totalSeconds)
+    private static async Task WaitWithSpinner(string spinnerText, string warnText, double totalSeconds)
     {
         var remaining = (int)Math.Ceiling(totalSeconds);
-        using (var spinner = new Spinner("Väntar innan nytt försök..."))
+
+        using (var spinner = new Spinner(spinnerText, warnText))
         {
             while (remaining > 0)
             {
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 remaining--;
             }
-            spinner.Stop();
+
+            spinner.Stop(success: false);
         }
     }
 }

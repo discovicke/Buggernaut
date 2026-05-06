@@ -2,38 +2,42 @@
 
 /// <summary>
 /// Animated loading spinner for long-running operations.
-/// Use in a using-statement for automatic cleanup.
-///
-/// Example:
-///   using (var spinner = new Spinner("Väntar på API..."))
-///   {
-///       await SomeAsyncOperation();
-///   }
+/// Can optionally render a static tail text on the same line.
 /// </summary>
 public class Spinner : IDisposable
 {
     private readonly string _message;
+    private readonly string _tailText;
     private readonly Thread _thread;
     private bool _isSpinning;
 
-    public Spinner(string message)
+    public Spinner(string message, string tailText = "")
     {
         _message = message;
+        _tailText = tailText;
         _isSpinning = true;
-        _thread = new Thread(Spin);
-        _thread.IsBackground = true;
+        _thread = new Thread(Spin) { IsBackground = true };
         _thread.Start();
     }
 
     private void Spin()
     {
         var chars = new[] { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' };
-        int i = 0;
+        var i = 0;
 
         while (_isSpinning)
         {
+            Console.Write("\r");
+
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write($"\r[{chars[i]}] {_message}");
+            Console.Write($"[{chars[i]}] {_message}");
+
+            if (!string.IsNullOrWhiteSpace(_tailText))
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"  {_tailText}");
+            }
+
             Console.ResetColor();
             i = (i + 1) % chars.Length;
             Thread.Sleep(100);
@@ -42,11 +46,15 @@ public class Spinner : IDisposable
 
     public void Dispose()
     {
-        Stop();
+        Stop(success: false);
     }
 
-    /// <summary>Stop the spinner and clean the line. Idempotent.</summary>
-    public void Stop()
+    /// <summary>
+    /// Stop spinner and render final status marker.
+    /// success=true  => green check
+    /// success=false => red X
+    /// </summary>
+    public void Stop(bool success)
     {
         if (!_isSpinning)
             return;
@@ -54,12 +62,24 @@ public class Spinner : IDisposable
         _isSpinning = false;
         _thread.Join(TimeSpan.FromSeconds(1));
 
-        try
+        Console.Write("\r");
+
+        Console.ForegroundColor = success 
+            ? ConsoleColor.Green 
+            : ConsoleColor.Red;
+        Console.Write(success 
+            ? "[✓] " 
+            : "[X] ");
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.Write(_message);
+
+        if (!string.IsNullOrWhiteSpace(_tailText))
         {
-            Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"  {_tailText}");
         }
-        catch
-        { }
+
+        Console.ResetColor();
     }
 }
-
