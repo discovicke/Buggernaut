@@ -101,13 +101,27 @@ public static class Printer
         Console.Write($"\r{new string(' ', RuleWidth)}\r");
     }
 
-    /// <summary>Labeled key/value row – used in scaffold summaries and help text.</summary>
+    /// <summary>Labeled key/value row – used in scaffold summaries.</summary>
     public static void KeyValue(string key, string value, int indent = 1)
     {
         Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.Write(Indented($"{key,-14}", indent));
         Console.ResetColor();
         Console.WriteLine(value);
+    }
+
+    /// <summary>
+    /// CLI flag documentation row with two fixed columns.
+    ///   Col 1 (34 chars): flag names + argument hint  e.g. "--category, -c &lt;category&gt;"
+    ///   Col 2           : description text
+    /// </summary>
+    public static void Flag(string flagsWithArg, string description, int indent = 1)
+    {
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.Write(Indented($"{flagsWithArg,-34}", indent));
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine(description);
+        Console.ResetColor();
     }
     
     private static void Write(ConsoleColor color, string message, int indent)
