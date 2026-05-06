@@ -439,7 +439,7 @@ public static class MockChallengeFactory
                       }
                       """,
         Explanation:
-        "Den ursprungliga koden lägger ett avslutande \", \" efter sista elementet. Lösningen lägger komma bara mellan elementen.",
+        "The original code appends a trailing \", \" after the last element. The fix only appends a comma between elements.",
         TestCode: """
                   namespace Buggernaut.Tests;
                   using Xunit;
@@ -474,7 +474,7 @@ public static class MockChallengeFactory
     private static Template GuessOutputHard() => new(
         ClassName: "GuessOutputHardClosureCapture",
         Description:
-        "Metoden returnerar en lista med Func-delegater. Vad skriver de ut? Det finns ett klassiskt C#-fallgrop här.",
+        "The method returns a list of Func delegates. What do they return? There is a classic C# closure trap here.",
         BuggyCode: """
                    namespace Buggernaut.Exercises;
                    using System;
@@ -482,7 +482,7 @@ public static class MockChallengeFactory
 
                    public class GuessOutputHardClosureCapture
                    {
-                       // TODO: Something is wrong here – alla delegater ger samma resultat
+                        // TODO: Something is wrong here – all delegates return the same result
                        public List<Func<int>> CreateMultipliers(int count)
                        {
                            var funcs = new List<Func<int>>();
@@ -494,7 +494,7 @@ public static class MockChallengeFactory
                        }
                    }
                    """,
-        Hint: "Vad capture:as i lambda? Prova att skapa en lokal kopia av i inuti loopen.",
+        Hint: "What does the lambda capture? Try creating a local copy of i inside the loop.",
         SolutionCode: """
                       namespace Buggernaut.Exercises;
                       using System;
@@ -515,7 +515,7 @@ public static class MockChallengeFactory
                       }
                       """,
         Explanation:
-        "Lambdan capture:ar referensen till i, inte dess värde. När loopen är klar är i == count och alla delegater returnerar count. Fix: kopiera i till en lokal variabel inuti loopen.",
+        "The lambda captures a reference to i, not its value. When the loop ends i == count, so all delegates return count. Fix: copy i to a local variable inside the loop.",
         TestCode: """
                   namespace Buggernaut.Tests;
                   using Xunit;
@@ -560,21 +560,21 @@ public static class MockChallengeFactory
 
     private static Template FillInTheGapEasy() => new(
         ClassName: "FillInTheGapEasyMaxFinder",
-        Description: "Metoden ska returnera det största talet i en lista. Implementeringen saknas – fyll i den.",
+        Description: "The method should return the largest number in a list. The implementation is missing — fill it in.",
         BuggyCode: """
                    namespace Buggernaut.Exercises;
                    using System.Collections.Generic;
 
                    public class FillInTheGapEasyMaxFinder
                    {
-                       // TODO: Something is wrong here – implementera metoden
+                        // TODO: Something is wrong here – implement the method
                        public int FindMax(List<int> numbers)
                        {
                            throw new System.NotImplementedException();
                        }
                    }
                    """,
-        Hint: "Loopa igenom listan och håll koll på det hittills största värdet.",
+        Hint: "Loop through the list and keep track of the largest value seen so far.",
         SolutionCode: """
                       namespace Buggernaut.Exercises;
                       using System.Collections.Generic;
@@ -590,7 +590,7 @@ public static class MockChallengeFactory
                           }
                       }
                       """,
-        Explanation: "Initiera max med första elementet och uppdatera det varje gång ett större tal hittas.",
+        Explanation: "Initialise max with the first element and update it whenever a larger number is found.",
         TestCode: """
                   namespace Buggernaut.Tests;
                   using Xunit;
@@ -624,13 +624,13 @@ public static class MockChallengeFactory
 
     private static Template FillInTheGapMedium() => new(
         ClassName: "FillInTheGapMediumAnagram",
-        Description: "Metoden ska avgöra om två strängar är anagram av varandra. Implementeringen saknas – fyll i den.",
+        Description: "The method should determine whether two strings are anagrams of each other. The implementation is missing — fill it in.",
         BuggyCode: """
                    namespace Buggernaut.Exercises;
 
                    public class FillInTheGapMediumAnagram
                    {
-                       // TODO: Something is wrong here – implementera IsAnagram
+                        // TODO: Something is wrong here – implement IsAnagram
                        public bool IsAnagram(string a, string b)
                        {
                            throw new System.NotImplementedException();
@@ -638,7 +638,7 @@ public static class MockChallengeFactory
                    }
                    """,
         Hint:
-        "Två strängar är anagram om de innehåller exakt samma tecken i samma antal. Tänk på sortering eller frekvensräkning.",
+        "Two strings are anagrams if they contain exactly the same characters in the same quantities. Think about sorting or frequency counting.",
         SolutionCode: """
                       namespace Buggernaut.Exercises;
                       using System.Linq;
@@ -654,7 +654,7 @@ public static class MockChallengeFactory
                           }
                       }
                       """,
-        Explanation: "Sortera tecknen i båda strängarna och jämför. Om de är identiska är strängarna anagram.",
+        Explanation: "Sort the characters in both strings and compare. If they are identical, the strings are anagrams.",
         TestCode: """
                   namespace Buggernaut.Tests;
                   using Xunit;
@@ -696,7 +696,7 @@ public static class MockChallengeFactory
     private static Template FillInTheGapHard() => new(
         ClassName: "FillInTheGapHardLruCache",
         Description:
-        "Implementera en LRU-cache (Least Recently Used) med fast storlek. Get ska returnera -1 om nyckeln inte finns. Put ska eviktera det minst nyligen använda elementet om cachen är full.",
+        "Implement an LRU cache (Least Recently Used) with a fixed capacity. Get should return -1 if the key does not exist. Put should evict the least recently used entry when the cache is full.",
         BuggyCode: """
                    namespace Buggernaut.Exercises;
                    using System.Collections.Generic;
@@ -714,7 +714,7 @@ public static class MockChallengeFactory
                            _list = new LinkedList<(int key, int value)>();
                        }
 
-                       // TODO: Something is wrong here – implementera Get och Put
+                        // TODO: Something is wrong here – implement Get and Put
                        public int Get(int key)
                        {
                            throw new System.NotImplementedException();
@@ -727,7 +727,7 @@ public static class MockChallengeFactory
                    }
                    """,
         Hint:
-        "Använd en LinkedList för ordning och en Dictionary för O(1)-uppslag. Get ska flytta noden till fronten. Put ska eviktera sist i listan om kapaciteten nås.",
+        "Use a LinkedList for ordering and a Dictionary for O(1) lookups. Get should move the node to the front. Put should evict the last entry in the list when capacity is reached.",
         SolutionCode: """
                       namespace Buggernaut.Exercises;
                       using System.Collections.Generic;
@@ -772,7 +772,7 @@ public static class MockChallengeFactory
                       }
                       """,
         Explanation:
-        "LinkedList håller ordning (MRU längst fram, LRU längst bak). Dictionary ger O(1)-uppslag. Get uppdaterar ordning genom att flytta noden till fronten.",
+        "LinkedList maintains order (MRU at front, LRU at back). Dictionary provides O(1) lookups. Get updates the order by moving the node to the front.",
         TestCode: """
                   namespace Buggernaut.Tests;
                   using Xunit;
