@@ -5,6 +5,8 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        Printer.H1("Buggernaut Generator");
+
         CliArgumentParser.GenerateOptions options;
         try
         {
@@ -13,11 +15,7 @@ class Program
         catch (CliArgumentException ex)
         {
             if (ex.IsError)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n {ex.Message}");
-                Console.ResetColor();
-            }
+                Printer.Error(ex.Message);
             return;
         }
 
@@ -27,15 +25,11 @@ class Program
 
         if (options.DryRun)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"\n[DRY-RUN] Genererar mock-övning för {options.Category} ({options.Difficulty})...");
-            Console.ResetColor();
+            Printer.H2("Dry-run");
+            Printer.Info($"Genererar mock-övning  {options.Category}  ({options.Difficulty})");
 
             var mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Mock-övning skapad: \"{mock.Title}\"");
-            Console.ResetColor();
+            Printer.Ok($"Mock-övning klar: {mock.Title}");
 
             var dryScaffolder = new ExerciseScaffolder();
             dryScaffolder.Scaffold(mock);
@@ -46,9 +40,13 @@ class Program
 
         if (string.IsNullOrEmpty(apiKey))
         {
-            Console.WriteLine("API-nyckel saknas. Kör: dotnet user-secrets set \"Gemini:ApiKey\" \"din-nyckel\"");
+            Printer.Error("API-nyckel saknas.");
+            Printer.Dim("Kör: dotnet user-secrets set \"Gemini:ApiKey\" \"din-nyckel\"", indent: 1);
             return;
         }
+
+        // ── Generering ────────────────────────────────────────────────────────
+        Printer.H2($"Genererar  {options.Category}  ({options.Difficulty})");
 
         var client = new GeminiClient(apiKey);
         var prompt = PromptBuilder.BuildUserPrompt(options.Category, options.Difficulty);
@@ -58,7 +56,7 @@ class Program
 
         for (int attempt = 1; attempt <= maxValidationAttempts; attempt++)
         {
-            Console.WriteLine($"\nGenererar {options.Category} ({options.Difficulty})... (försök {attempt}/{maxValidationAttempts})");
+            Printer.Info($"Försök {attempt}/{maxValidationAttempts}...");
 
             try
             {
@@ -72,52 +70,33 @@ class Program
                     break;
                 }
 
-                PrintValidationWarning(reason, attempt, maxValidationAttempts);
+                Printer.Warn($"Ogiltigt svar: {reason}", indent: 1);
+                if (attempt < maxValidationAttempts)
+                    Printer.Dim("Begär nytt svar...", indent: 1);
             }
             catch (Exception ex)
             {
-                // HTTP-fel som inte kunde återhämtas, eller JSON-parsningsfel
-                PrintExceptionWarning(ex.Message, attempt, maxValidationAttempts);
+                Printer.Error(ex.Message, indent: 1);
 
                 // Avbryt omedelbart vid terminala fel (ex. 401 Unauthorized)
                 if (ex.Message.Contains("401") || ex.Message.Contains("400"))
                     return;
+
+                if (attempt < maxValidationAttempts)
+                    Printer.Dim("Försöker igen...", indent: 1);
             }
         }
 
         if (challenge is null)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n Kunde inte generera en giltig övning efter {maxValidationAttempts} försök.");
-            Console.ResetColor();
+            Printer.Blank();
+            Printer.Error($"Kunde inte generera en giltig övning efter {maxValidationAttempts} försök.");
             return;
         }
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\n Övning genererad: \"{challenge.Title}\"");
-        Console.ResetColor();
+        Printer.Ok($"Övning genererad: \"{challenge.Title}\"");
 
         var scaffolder = new ExerciseScaffolder();
         scaffolder.Scaffold(challenge);
-    }
-
-    private static void PrintValidationWarning(string reason, int attempt, int maxAttempts)
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"\t  Ogiltigt svar: {reason}");
-        Console.ResetColor();
-
-        if (attempt < maxAttempts)
-            Console.WriteLine("\tBegär nytt svar från Gemini...");
-    }
-
-    private static void PrintExceptionWarning(string message, int attempt, int maxAttempts)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"\t Fel: {message}");
-        Console.ResetColor();
-
-        if (attempt < maxAttempts)
-            Console.WriteLine("\tFörsöker igen...");
     }
 }

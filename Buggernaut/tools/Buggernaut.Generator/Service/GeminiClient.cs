@@ -103,17 +103,15 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 
     private static void PrintRetryWarning(int statusCode, int attempt, int maxAttempts, double waitSeconds)
     {
-        var (color, label) = statusCode switch
+        var label = statusCode switch
         {
-            429 => (ConsoleColor.Yellow, "Rate limit"),
-            503 => (ConsoleColor.Cyan, "Tjänsten otillgänglig"),
-            500 => (ConsoleColor.Magenta, "Serverfel"),
-            _ => (ConsoleColor.DarkYellow, $"HTTP {statusCode}")
+            429 => "Rate limit",
+            503 => "Tjänsten otillgänglig",
+            500 => "Serverfel",
+            _   => $"HTTP {statusCode}"
         };
 
-        Console.ForegroundColor = color;
-        Console.WriteLine($"\n\t{label} ({statusCode}) – försök {attempt}/{maxAttempts}. Väntar {waitSeconds:F0} s...");
-        Console.ResetColor();
+        Printer.Warn($"{label} ({statusCode})  –  försök {attempt}/{maxAttempts}  –  väntar {waitSeconds:F0} s", indent: 1);
     }
 
     private static async Task WaitWithCountdown(double totalSeconds)
@@ -121,11 +119,11 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
         var remaining = (int)Math.Ceiling(totalSeconds);
         while (remaining > 0)
         {
-            Console.Write($"\r\tÅterförsöker om {remaining,3} s...  ");
+            Printer.Countdown(remaining);
             await Task.Delay(TimeSpan.FromSeconds(1));
             remaining--;
         }
 
-        Console.Write("\r" + new string(' ', 30) + "\r");
+        Printer.ClearLine();
     }
 }

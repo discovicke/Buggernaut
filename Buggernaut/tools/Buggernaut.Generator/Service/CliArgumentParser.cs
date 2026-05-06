@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Buggernaut.Generator;
+﻿namespace Buggernaut.Generator;
 
 /// <summary>
 /// Parses and validates CLI arguments for the generate command.
@@ -98,50 +96,47 @@ public static class CliArgumentParser
 
     private static void PrintHelp()
     {
-        var help = new StringBuilder();
-        help.AppendLine("\n Buggernaut Generator – Hjälp\n");
-        help.AppendLine("Användning:");
-        help.AppendLine("  dotnet run -- generate [flaggor]\n");
-        help.AppendLine("Flaggor:");
-        help.AppendLine("  --category,\t-c <category>\tTyp av övning");
-        help.AppendLine("  --difficulty,\t-d <difficulty>\tSvårighetsgrad (standard: Medium)");
-        help.AppendLine("  --dry-run,\t-dr\t\tGenerera en lokal mock-övning (ingen API-nyckel krävs)");
-        help.AppendLine("  --list,\t-l\t\tVisa tillgängliga kategorier och svårighetsgrader");
-        help.AppendLine("  --help,\t-h\t\tVisa denna hjälptexten\n");
-        help.AppendLine("Tillgängliga kategorier:");
-        help.Append("  ");
-        help.AppendLine(string.Join(", ", Enum.GetNames(typeof(ChallengeCategories))));
-        help.AppendLine("\nTillgängliga svårighetsgrader:");
-        help.Append("  ");
-        help.AppendLine(string.Join(", ", Enum.GetNames(typeof(Difficulties))));
-        help.AppendLine("\nExempel:");
-        help.AppendLine("  dotnet run -- generate");
-        help.AppendLine("  dotnet run -- generate --category Bug --difficulty Hard");
-        help.AppendLine("  dotnet run -- generate -c LINQ -d Easy");
-        help.AppendLine("  dotnet run -- generate --dry-run --category AlgorithmRiddle");
-        help.AppendLine("  dotnet run -- generate --list");
 
-        Console.WriteLine(help);
+        Printer.H2("Användning");
+        Printer.Line("dotnet run -- generate [flaggor]", indent: 1);
+
+        Printer.H2("Flaggor");
+        Printer.KeyValue("--category, -c",  "<category>    Typ av övning");
+        Printer.KeyValue("--difficulty, -d", "<difficulty>  Svårighetsgrad  (standard: Medium)");
+        Printer.KeyValue("--dry-run, -dr",  "              Lokal mock-övning, ingen API-nyckel krävs");
+        Printer.KeyValue("--list, -l",      "              Visa tillgängliga kategorier och svårighetsgrader");
+        Printer.KeyValue("--help, -h",      "              Visa denna hjälptext");
+
+        Printer.H2("Kategorier");
+        Printer.Line(string.Join("  |  ", Enum.GetNames(typeof(ChallengeCategories))), indent: 1);
+
+        Printer.H2("Svårighetsgrader");
+        Printer.Line(string.Join("  |  ", Enum.GetNames(typeof(Difficulties))), indent: 1);
+
+        Printer.H2("Exempel");
+        Printer.Dim("dotnet run -- generate", indent: 1);
+        Printer.Dim("dotnet run -- generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Dim("dotnet run -- generate -c LINQ -d Easy", indent: 1);
+        Printer.Dim("dotnet run -- generate --dry-run --category AlgorithmRiddle", indent: 1);
+        Printer.Dim("dotnet run -- generate --list", indent: 1);
+        Printer.Blank();
     }
 
     private static void PrintList()
     {
-        var list = new StringBuilder();
-        list.AppendLine("\nBuggernaut – Tillgängliga utmaningar\n");
 
-        list.AppendLine("Kategorier:");
-        list.Append("  ");
-        list.AppendLine(string.Join(", ", Enum.GetNames(typeof(ChallengeCategories))));
+        Printer.H2("Kategorier");
+        foreach (var name in Enum.GetNames(typeof(ChallengeCategories)))
+            Printer.Line($"  {name}");
 
-        list.AppendLine("\nSvårighetsgrader:");
-        list.Append("  ");
-        list.AppendLine(string.Join(", ", Enum.GetNames(typeof(Difficulties))));
+        Printer.H2("Svårighetsgrader");
+        foreach (var name in Enum.GetNames(typeof(Difficulties)))
+            Printer.Line($"  {name}");
 
-        list.AppendLine("\nAnvändning:");
-        list.AppendLine("  dotnet run -- generate --category <category> --difficulty <difficulty>");
-        list.AppendLine("  dotnet run -- generate -c Bug -d Hard");
-
-        Console.WriteLine(list);
+        Printer.H2("Exempel");
+        Printer.Dim("dotnet run -- generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Dim("dotnet run -- generate -c LINQ -d Easy", indent: 1);
+        Printer.Blank();
     }
 }
 
