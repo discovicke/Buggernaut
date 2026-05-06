@@ -18,25 +18,12 @@ class Program
         }
 
         var client = new GeminiClient(apiKey);
-        var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.BlackBox, Difficulties.Hard);
+        var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.BlackBox, Difficulties.Medium);
         var raw = await client.GenerateAsync(prompt);
 
-        Console.WriteLine("=== RAW ===");
-        Console.WriteLine(raw);
-
         var challenge = ChallengeParser.Parse(raw);
-
-        Console.WriteLine($"\n=== {challenge.Title} ===");
-        Console.WriteLine(challenge.Description);
-        Console.WriteLine("\n--- Buggy Code ---");
-        Console.WriteLine(challenge.BuggyCode);
-        Console.WriteLine("\n--- Hint ---");
-        Console.WriteLine(challenge.Hint);
-        Console.WriteLine("\n--- Solution Code ---");
-        Console.WriteLine(challenge.SolutionCode);
-        Console.WriteLine("\n--- Explanation ---");
-        Console.WriteLine(challenge.Explanation);
-        Console.WriteLine("\n--- Test Code ---");
-        Console.WriteLine(challenge.TestCode);
+        
+        var scaffolder = new ExerciseScaffolder();
+        scaffolder.Scaffold(challenge);
     }
 }
