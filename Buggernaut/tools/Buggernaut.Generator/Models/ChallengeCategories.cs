@@ -8,4 +8,5 @@ public enum ChallengeCategories
     AlgorithmRiddle,
     LINQ,
     BlackBox,
+    LogTime,
 }
