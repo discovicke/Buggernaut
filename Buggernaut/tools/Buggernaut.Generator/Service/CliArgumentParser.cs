@@ -42,6 +42,11 @@ public static class CliArgumentParser
                 var difficultyValue = args[++i];
                 options.Difficulty = ParseDifficulty(difficultyValue);
             }
+            else if (args[i] == "--list" || args[i] == "-l")
+            {
+                PrintList();
+                throw new CliArgumentException("Visade lista.", isError: false);
+            }
             else if (args[i] == "--help" || args[i] == "-h")
             {
                 PrintHelp();
@@ -49,7 +54,8 @@ public static class CliArgumentParser
             }
             else
             {
-                throw new CliArgumentException($"Okänd flagga: '{args[i]}'. Använd --help för att se tillgängliga flaggor.");
+                throw new CliArgumentException(
+                    $"Okänd flagga: '{args[i]}'. Använd --help för att se tillgängliga flaggor.");
             }
         }
 
@@ -71,7 +77,8 @@ public static class CliArgumentParser
             return category;
 
         var available = string.Join(", ", Enum.GetNames(typeof(ChallengeCategories)));
-        throw new CliArgumentException($"Ogiltigt värde för --category: '{value}'.\nTillgängliga kategorier: {available}");
+        throw new CliArgumentException(
+            $"Ogiltigt värde för --category: '{value}'.\nTillgängliga kategorier: {available}");
     }
 
     private static Difficulties ParseDifficulty(string value)
@@ -80,7 +87,8 @@ public static class CliArgumentParser
             return difficulty;
 
         var available = string.Join(", ", Enum.GetNames(typeof(Difficulties)));
-        throw new CliArgumentException($"Ogiltigt värde för --difficulty: '{value}'.\nTillgängliga svårighetsgrader: {available}");
+        throw new CliArgumentException(
+            $"Ogiltigt värde för --difficulty: '{value}'.\nTillgängliga svårighetsgrader: {available}");
     }
 
     private static void PrintHelp()
@@ -92,7 +100,8 @@ public static class CliArgumentParser
         help.AppendLine("Flaggor:");
         help.AppendLine("  --category,\t-c <category>\tTyp av övning");
         help.AppendLine("  --difficulty,\t-d <difficulty>\tSvårighetsgrad (standard: Medium)");
-        help.AppendLine("  --help,\t-h\t\tVisa (den här) hjälptexten\n");
+        help.AppendLine("  --list,\t-l\t\tVisa tillgängliga kategorier och svårighetsgrader");
+        help.AppendLine("  --help,\t-h\t\tVisa denna hjälptexten\n");
         help.AppendLine("Tillgängliga kategorier:");
         help.Append("  ");
         help.AppendLine(string.Join(", ", Enum.GetNames(typeof(ChallengeCategories))));
@@ -103,8 +112,29 @@ public static class CliArgumentParser
         help.AppendLine("  dotnet run -- generate");
         help.AppendLine("  dotnet run -- generate --category Bug --difficulty Hard");
         help.AppendLine("  dotnet run -- generate -c LINQ -d Easy");
+        help.AppendLine("  dotnet run -- generate --list");
 
         Console.WriteLine(help);
+    }
+
+    private static void PrintList()
+    {
+        var list = new StringBuilder();
+        list.AppendLine("\nBuggernaut – Tillgängliga utmaningar\n");
+
+        list.AppendLine("Kategorier:");
+        list.Append("  ");
+        list.AppendLine(string.Join(", ", Enum.GetNames(typeof(ChallengeCategories))));
+
+        list.AppendLine("\nSvårighetsgrader:");
+        list.Append("  ");
+        list.AppendLine(string.Join(", ", Enum.GetNames(typeof(Difficulties))));
+
+        list.AppendLine("\nAnvändning:");
+        list.AppendLine("  dotnet run -- generate --category <category> --difficulty <difficulty>");
+        list.AppendLine("  dotnet run -- generate -c Bug -d Hard");
+
+        Console.WriteLine(list);
     }
 }
 
@@ -120,4 +150,3 @@ public class CliArgumentException : Exception
         IsError = isError;
     }
 }
-
