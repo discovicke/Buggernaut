@@ -10,7 +10,7 @@ public class ExerciseScaffolder
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..")
         );
     }
-
+    
     public void Scaffold(Challenge challenge)
     {
         var exercisePath = Path.Combine(_rootPath, "src", "Exercises", challenge.Title);
