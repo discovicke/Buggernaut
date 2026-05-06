@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Buggernaut.Generator;
 
-public class GeminiClient(string apiKey, int maxAttempts = 20)
+public class GeminiClient(string apiKey, int maxAttempts = 5)
 {
     private static readonly HttpStatusCode[] RetryableStatusCodes =
     [
@@ -74,7 +74,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 20)
             await WaitWithCountdown(waitSeconds);
         }
 
-        throw new Exception($" Lyckades inte generera Gemini-respons efter {maxAttempts} försök.");
+        throw new Exception($"Lyckades inte generera Gemini-respons efter {maxAttempts} försök.");
     }
 
     private static double GetWaitSeconds(HttpResponseMessage response, int attempt)
@@ -109,7 +109,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 20)
         };
 
         Console.ForegroundColor = color;
-        Console.WriteLine($"\n  {label} ({statusCode}) – försök {attempt}/{maxAttempts}. Väntar {waitSeconds:F0} s...");
+        Console.WriteLine($"\n\t{label} ({statusCode}) – försök {attempt}/{maxAttempts}. Väntar {waitSeconds:F0} s...");
         Console.ResetColor();
     }
 
@@ -118,7 +118,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 20)
         var remaining = (int)Math.Ceiling(totalSeconds);
         while (remaining > 0)
         {
-            Console.Write($"\r   Återförsöker om {remaining,3} s...  ");
+            Console.Write($"\r\tÅterförsöker om {remaining,3} s...  ");
             await Task.Delay(TimeSpan.FromSeconds(1));
             remaining--;
         }
