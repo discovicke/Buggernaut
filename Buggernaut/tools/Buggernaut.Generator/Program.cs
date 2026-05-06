@@ -28,7 +28,12 @@ class Program
             Printer.H2("Dry-run");
             Printer.Info($"Genererar mock-övning  {options.Category}  ({options.Difficulty})");
 
-            var mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
+            Challenge mock;
+            using (var spinner = new Spinner("Skapar mock-utmaning"))
+            {
+                mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
+            }
+
             Printer.Ok($"Mock-övning klar: {mock.Title}");
 
             var dryScaffolder = new ExerciseScaffolder();
@@ -59,19 +64,23 @@ class Program
 
             try
             {
-                var raw = await client.GenerateAsync(prompt);
-                var parsed = ChallengeParser.Parse(raw);
-                var (isValid, reason) = ChallengeValidator.Validate(parsed);
-
-                if (isValid)
+                string raw;
+                using (var spinner = new Spinner("Hämtar och validerar"))
                 {
-                    challenge = parsed;
-                    break;
-                }
+                    raw = await client.GenerateAsync(prompt);
+                    var parsed = ChallengeParser.Parse(raw);
+                    var (isValid, reason) = ChallengeValidator.Validate(parsed);
 
-                Printer.Warn($"Ogiltigt svar: {reason}", indent: 1);
-                if (attempt < maxValidationAttempts)
-                    Printer.Dim("Begär nytt svar...", indent: 1);
+                    if (isValid)
+                    {
+                        challenge = parsed;
+                        break;
+                    }
+
+                    Printer.Warn($"Ogiltigt svar: {reason}", indent: 1);
+                    if (attempt < maxValidationAttempts)
+                        Printer.Dim("Begär nytt svar...", indent: 1);
+                }
             }
             catch (Exception ex)
             {
