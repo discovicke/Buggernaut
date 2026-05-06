@@ -56,18 +56,18 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 
             // Terminal errors, retry kommer inte hjälpa
             if (response.StatusCode == HttpStatusCode.Unauthorized)
-                throw new Exception($" 401 Unauthorized – kontrollera din API-nyckel.");
+                throw new Exception($"401 Unauthorized – kontrollera din API-nyckel.");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 var body401 = await response.Content.ReadAsStringAsync();
-                throw new Exception($" 400 Bad Request: {body401}");
+                throw new Exception($"400 Bad Request: {body401}");
             }
 
             if (!RetryableStatusCodes.Contains(response.StatusCode))
             {
                 var errorBody = await response.Content.ReadAsStringAsync();
-                throw new Exception($" HTTP {(int)response.StatusCode} – kan inte återförsöka: {errorBody}");
+                throw new Exception($"HTTP {(int)response.StatusCode} – kan inte återförsöka: {errorBody}");
             }
 
             // Retryable error – lista ut hur länge du måste vänta och försök igen

@@ -28,12 +28,7 @@ class Program
             Printer.H2("Dry-run");
             Printer.Info($"Genererar mock-övning  {options.Category}  ({options.Difficulty})");
 
-            Challenge mock;
-            using (var spinner = new Spinner("Skapar mock-utmaning"))
-            {
-                mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
-            }
-
+            var mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
             Printer.Ok($"Mock-övning klar: {mock.Title}");
 
             var dryScaffolder = new ExerciseScaffolder();
