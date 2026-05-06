@@ -42,6 +42,15 @@ public class Spinner : IDisposable
 
     public void Dispose()
     {
+        Stop();
+    }
+
+    /// <summary>Stop the spinner and clean the line. Idempotent.</summary>
+    public void Stop()
+    {
+        if (!_isSpinning)
+            return;
+
         _isSpinning = false;
         _thread.Join(TimeSpan.FromSeconds(1));
 

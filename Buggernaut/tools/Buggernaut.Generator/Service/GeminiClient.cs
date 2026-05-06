@@ -117,13 +117,14 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
     private static async Task WaitWithCountdown(double totalSeconds)
     {
         var remaining = (int)Math.Ceiling(totalSeconds);
-        while (remaining > 0)
+        using (var spinner = new Spinner("Väntar innan nytt försök..."))
         {
-            Printer.Countdown(remaining);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-            remaining--;
+            while (remaining > 0)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                remaining--;
+            }
+            spinner.Stop();
         }
-
-        Printer.ClearLine();
     }
 }

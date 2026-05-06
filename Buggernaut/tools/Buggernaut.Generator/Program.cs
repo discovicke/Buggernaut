@@ -59,23 +59,19 @@ class Program
 
             try
             {
-                string raw;
-                using (var spinner = new Spinner("Hämtar och validerar"))
+                var raw = await client.GenerateAsync(prompt);
+                var parsed = ChallengeParser.Parse(raw);
+                var (isValid, reason) = ChallengeValidator.Validate(parsed);
+
+                if (isValid)
                 {
-                    raw = await client.GenerateAsync(prompt);
-                    var parsed = ChallengeParser.Parse(raw);
-                    var (isValid, reason) = ChallengeValidator.Validate(parsed);
-
-                    if (isValid)
-                    {
-                        challenge = parsed;
-                        break;
-                    }
-
-                    Printer.Warn($"Ogiltigt svar: {reason}", indent: 1);
-                    if (attempt < maxValidationAttempts)
-                        Printer.Dim("Begär nytt svar...", indent: 1);
+                    challenge = parsed;
+                    break;
                 }
+
+                Printer.Warn($"Ogiltigt svar: {reason}", indent: 1);
+                if (attempt < maxValidationAttempts)
+                    Printer.Dim("Begär nytt svar...", indent: 1);
             }
             catch (Exception ex)
             {
