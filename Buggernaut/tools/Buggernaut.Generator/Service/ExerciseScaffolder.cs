@@ -35,8 +35,9 @@ public class ExerciseScaffolder
         File.WriteAllText(testPath, challenge.TestCode);
         File.WriteAllText(solutionPath, challenge.SolutionCode);
 
-        Printer.H2("Övning skapad");
-        Printer.Ok(className);
+        Printer.Ok($"Övning genererad: \"{challenge.Title}\"");
+        Printer.H2("Övningsinformation");
+        Printer.Info(className);
         Printer.KeyValue("Övning",   $"src/Buggernaut.Exercises/{className}.cs");
         Printer.KeyValue("Test",     $"tests/Buggernaut.Tests/{className}Tests.cs");
         Printer.KeyValue("Lösning",  $"solutions/{className}.cs");

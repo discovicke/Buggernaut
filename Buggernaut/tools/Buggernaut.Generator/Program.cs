@@ -99,7 +99,6 @@ class Program
         Printer.Info("Genererar filer...", indent: 1);
         var scaffolder = new ExerciseScaffolder();
         scaffolder.Scaffold(challenge);
-
-        Printer.Ok($"Övning genererad: \"{challenge.Title}\"");
+        
     }
 }

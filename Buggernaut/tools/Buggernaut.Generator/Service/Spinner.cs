@@ -68,11 +68,8 @@ public class Spinner : IDisposable
             ? ConsoleColor.Green 
             : ConsoleColor.Red;
         Console.Write(success 
-            ? "[✓] " 
-            : "[X] ");
-
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.Write(_message);
+            ? $"[✓] {_message}" 
+            : $"[X] {_message}");
 
         if (!string.IsNullOrWhiteSpace(_tailText))
         {
