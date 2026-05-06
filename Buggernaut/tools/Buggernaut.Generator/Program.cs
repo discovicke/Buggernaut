@@ -17,7 +17,7 @@ class Program
             return;
         }
 
-        var client = new GeminiClient(apiKey);
+        var client = new GeminiClient(apiKey, maxAttempts: 5);
         var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.BlackBox, Difficulties.Medium);
         var raw = await client.GenerateAsync(prompt);
 

@@ -1,9 +1,19 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 
 namespace Buggernaut.Generator;
 
-public class GeminiClient(string apiKey)
+public class GeminiClient(string apiKey, int maxAttempts = 20)
 {
+    private static readonly HttpStatusCode[] RetryableStatusCodes =
+    [
+        HttpStatusCode.TooManyRequests,       // 429 rate limit
+        HttpStatusCode.ServiceUnavailable,    // 503 overloaded / maintenance
+        HttpStatusCode.BadGateway,            // 502
+        HttpStatusCode.GatewayTimeout,        // 504
+        HttpStatusCode.InternalServerError    // 500 transient serverfel
+    ];
+
     private readonly HttpClient _http = new();
 
     public async Task<string> GenerateAsync(string prompt)
@@ -21,35 +31,97 @@ public class GeminiClient(string apiKey)
                 new { parts = new[] { new { text = prompt } } }
             }
         };
-        
+
         var json = JsonSerializer.Serialize(body);
 
-        for (int attempt = 0; attempt < 3; attempt++)
+        for (int attempt = 1; attempt <= maxAttempts; attempt++)
         {
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             var response = await _http.PostAsync(url, content);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            if (response.IsSuccessStatusCode)
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Rate limit, väntar 10 sekunder...");
-                Console.ResetColor();
-                await Task.Delay(TimeSpan.FromSeconds(10));
-                continue;
+                var result = await response.Content.ReadAsStringAsync();
+                using var document = JsonDocument.Parse(result);
+                return document.RootElement
+                    .GetProperty("candidates")
+                    .EnumerateArray().First()
+                    .GetProperty("content")
+                    .GetProperty("parts").EnumerateArray().First()
+                    .GetProperty("text").GetString() ?? "";
             }
 
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-        
-            using var document = JsonDocument.Parse(result);
-            return document.RootElement
-                .GetProperty("candidates")
-                .EnumerateArray().First()
-                .GetProperty("content")
-                .GetProperty("parts").EnumerateArray().First()
-                .GetProperty("text").GetString() ?? "";
+            // Terminal errors, retry kommer inte hjälpa
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+                throw new Exception($" 401 Unauthorized – kontrollera din API-nyckel.");
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var body401 = await response.Content.ReadAsStringAsync();
+                throw new Exception($" 400 Bad Request: {body401}");
+            }
+
+            if (!RetryableStatusCodes.Contains(response.StatusCode))
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($" HTTP {(int)response.StatusCode} – kan inte återförsöka: {errorBody}");
+            }
+
+            // Retryable error – lista ut hur länge du måste vänta och försök igen
+            var waitSeconds = GetWaitSeconds(response, attempt);
+
+            PrintRetryWarning((int)response.StatusCode, attempt, maxAttempts, waitSeconds);
+            await WaitWithCountdown(waitSeconds);
         }
 
-        throw new Exception("Lyckades inte generera Gemini respons efter 3 försök.");
+        throw new Exception($" Lyckades inte generera Gemini-respons efter {maxAttempts} försök.");
+    }
+
+    private static double GetWaitSeconds(HttpResponseMessage response, int attempt)
+    {
+        // Respect Retry-After header (value can be seconds or an HTTP-date)
+        if (response.Headers.RetryAfter is { } retryAfter)
+        {
+            if (retryAfter.Delta is { } delta)
+                return Math.Max(delta.TotalSeconds, 1);
+
+            if (retryAfter.Date is { } date)
+            {
+                var diff = date - DateTimeOffset.UtcNow;
+                if (diff.TotalSeconds > 0)
+                    return diff.TotalSeconds;
+            }
+        }
+
+        var baseDelay = Math.Min(5 * Math.Pow(2, attempt - 1), 120);
+        var jitter = Random.Shared.NextDouble() * 2; 
+        return baseDelay + jitter;
+    }
+
+    private static void PrintRetryWarning(int statusCode, int attempt, int maxAttempts, double waitSeconds)
+    {
+        var (color, label) = statusCode switch
+        {
+            429 => (ConsoleColor.Yellow,  "Rate limit"),
+            503 => (ConsoleColor.Cyan,    "Tjänsten otillgänglig"),
+            500 => (ConsoleColor.Magenta, "Serverfel"),
+            _   => (ConsoleColor.DarkYellow, $"HTTP {statusCode}")
+        };
+
+        Console.ForegroundColor = color;
+        Console.WriteLine($"\n  {label} ({statusCode}) – försök {attempt}/{maxAttempts}. Väntar {waitSeconds:F0} s...");
+        Console.ResetColor();
+    }
+
+    private static async Task WaitWithCountdown(double totalSeconds)
+    {
+        var remaining = (int)Math.Ceiling(totalSeconds);
+        while (remaining > 0)
+        {
+            Console.Write($"\r   Återförsöker om {remaining,3} s...  ");
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            remaining--;
+        }
+        Console.Write("\r" + new string(' ', 30) + "\r"); 
     }
 }
