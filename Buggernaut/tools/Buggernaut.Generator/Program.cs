@@ -55,12 +55,15 @@ class Program
 
         for (int attempt = 1; attempt <= maxValidationAttempts; attempt++)
         {
-            Printer.Info($"Försök {attempt}/{maxValidationAttempts}...");
+            Printer.Info($"Genererar utmaning  –  Försök {attempt}/{maxValidationAttempts}");
 
             try
             {
                 var raw = await client.GenerateAsync(prompt);
+                Printer.Info("Läser JSON-svar...", indent: 1);
                 var parsed = ChallengeParser.Parse(raw);
+
+                Printer.Info("Validerar JSON-svar...", indent: 1);
                 var (isValid, reason) = ChallengeValidator.Validate(parsed);
 
                 if (isValid)
@@ -89,13 +92,14 @@ class Program
         if (challenge is null)
         {
             Printer.Blank();
-            Printer.Error($"Kunde inte generera en giltig övning efter {maxValidationAttempts} försök.");
+            Printer.Error($"Kunde inte generera en giltig övning efter {maxValidationAttempts} försök.", indent: 1);
             return;
         }
 
-        Printer.Ok($"Övning genererad: \"{challenge.Title}\"");
-
+        Printer.Info("Genererar filer...", indent: 1);
         var scaffolder = new ExerciseScaffolder();
         scaffolder.Scaffold(challenge);
+
+        Printer.Ok($"Övning genererad: \"{challenge.Title}\"");
     }
 }
