@@ -5,7 +5,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        Printer.H1("Buggernaut Generator");
+        Printer.H1("Buggernaut");
 
         CliArgumentParser.GenerateOptions options;
         try
@@ -45,7 +45,6 @@ class Program
             return;
         }
 
-        // ── Generering ────────────────────────────────────────────────────────
         Printer.H2($"Genererar  {options.Category}  ({options.Difficulty})");
 
         var client = new GeminiClient(apiKey);

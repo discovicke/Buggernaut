@@ -101,11 +101,11 @@ public static class CliArgumentParser
         Printer.Line("dotnet run -- generate [flaggor]", indent: 1);
 
         Printer.H2("Flaggor");
-        Printer.KeyValue("--category, -c",  "<category>    Typ av övning");
-        Printer.KeyValue("--difficulty, -d", "<difficulty>  Svårighetsgrad  (standard: Medium)");
-        Printer.KeyValue("--dry-run, -dr",  "              Lokal mock-övning, ingen API-nyckel krävs");
-        Printer.KeyValue("--list, -l",      "              Visa tillgängliga kategorier och svårighetsgrader");
-        Printer.KeyValue("--help, -h",      "              Visa denna hjälptext");
+        Printer.Flag("--category, -c <category>",    "Typ av övning");
+        Printer.Flag("--difficulty, -d <difficulty>", "Svårighetsgrad  (standard: Medium)");
+        Printer.Flag("--dry-run, -dr",               "Lokal mock-övning, ingen API-nyckel krävs");
+        Printer.Flag("--list, -l",                   "Visa tillgängliga kategorier och svårighetsgrader");
+        Printer.Flag("--help, -h",                   "Visa denna hjälptext");
 
         Printer.H2("Kategorier");
         Printer.Line(string.Join("  |  ", Enum.GetNames(typeof(ChallengeCategories))), indent: 1);
