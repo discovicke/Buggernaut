@@ -17,13 +17,70 @@ class Program
             return;
         }
 
-        var client = new GeminiClient(apiKey, maxAttempts: 5);
+        var client = new GeminiClient(apiKey);
         var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.BlackBox, Difficulties.Medium);
-        var raw = await client.GenerateAsync(prompt);
 
-        var challenge = ChallengeParser.Parse(raw);
-        
+        const int maxValidationAttempts = 5;
+        Challenge? challenge = null;
+
+        for (int attempt = 1; attempt <= maxValidationAttempts; attempt++)
+        {
+            Console.WriteLine($"\nGenererar övning... (försök {attempt}/{maxValidationAttempts})");
+
+            try
+            {
+                var raw = await client.GenerateAsync(prompt);
+                var parsed = ChallengeParser.Parse(raw);
+                var (isValid, reason) = ChallengeValidator.Validate(parsed);
+
+                if (isValid)
+                {
+                    challenge = parsed;
+                    break;
+                }
+
+                PrintValidationWarning(reason, attempt, maxValidationAttempts);
+            }
+            catch (Exception ex)
+            {
+                // HTTP-fel som inte kunde återhämtas, eller JSON-parsningsfel
+                PrintExceptionWarning(ex.Message, attempt, maxValidationAttempts);
+
+                // Avbryt omedelbart vid terminala fel (ex. 401 Unauthorized)
+                if (ex.Message.Contains("401") || ex.Message.Contains("400"))
+                    return;
+            }
+        }
+
+        if (challenge is null)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"\nKunde inte generera en giltig övning efter {maxValidationAttempts} försök.");
+            Console.ResetColor();
+            return;
+        }
+
         var scaffolder = new ExerciseScaffolder();
         scaffolder.Scaffold(challenge);
+    }
+
+    private static void PrintValidationWarning(string reason, int attempt, int maxAttempts)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"\tOgiltigt svar: {reason}");
+        Console.ResetColor();
+
+        if (attempt < maxAttempts)
+            Console.WriteLine("Begär nytt svar från Gemini...");
+    }
+
+    private static void PrintExceptionWarning(string message, int attempt, int maxAttempts)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"\tFel: {message}");
+        Console.ResetColor();
+
+        if (attempt < maxAttempts)
+            Console.WriteLine("\tFörsöker igen...");
     }
 }
