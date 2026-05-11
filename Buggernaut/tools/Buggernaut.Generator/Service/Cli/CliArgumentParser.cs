@@ -1,8 +1,8 @@
 ﻿namespace Buggernaut.Generator;
 
 /// <summary>
-/// Parses and validates CLI arguments for the generate command.
-/// Usage: dotnet buggernaut [command] [flags]
+/// Parses and validates CLI arguments for Buggernaut commands.
+/// Usage: dotnet buggernaut [generate] [flags]
 /// </summary>
 public static class CliArgumentParser
 {
@@ -24,6 +24,12 @@ public static class CliArgumentParser
         {
             PrintHelp();
             throw new CliArgumentException("Visat hjälp.", isError: false);
+        }
+
+        if (args[0] == "--list" || args[0] == "-l")
+        {
+            PrintList();
+            throw new CliArgumentException("Visade lista.", isError: false);
         }
 
         if (args[0] == "hint" || args[0] == "explain")
@@ -121,7 +127,9 @@ public static class CliArgumentParser
     private static void PrintHelp()
     {
         Printer.H2("Användning");
-        Printer.Line("dotnet buggernaut [kommando] [flaggor]", indent: 1);
+        Printer.Line("dotnet buggernaut --help", indent: 1);
+        Printer.Line("dotnet buggernaut [generate] [flaggor]", indent: 1);
+        Printer.Line("dotnet buggernaut <hint|explain> <ClassName>", indent: 1);
 
         Printer.H2("Kommandon");
         Printer.Flag("generate",                    "Generera en ny övning (standardkommandot)");
