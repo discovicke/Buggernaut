@@ -23,7 +23,8 @@ public class PromptBuilder
          - testCode: a valid xUnit test class. Class name must be [ClassName]Tests. At least 3 [Fact] tests. 
          - Tests MUST fail on buggyCode and pass on solutionCode.
          - Tests must be internally consistent. All [Fact] tests must agree on the same behavioral contract.
-         - All classes use namespace Buggernaut.Exercises.
+         - buggyCode and solutionCode MUST use namespace Buggernaut.Exercises.
+         - testCode MUST use namespace Buggernaut.Tests (NOT Buggernaut.Exercises or Buggernaut.Exercises.Tests).
          - testCode must use: using Xunit; using Buggernaut.Exercises;
          - No NuGet packages, only System namespace (except Xunit in testCode).
          """;
