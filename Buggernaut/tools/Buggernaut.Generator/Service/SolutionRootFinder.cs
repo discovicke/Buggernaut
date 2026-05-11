@@ -4,7 +4,7 @@ internal static class SolutionRootFinder
 {
     public static string Find()
     {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
         while (dir != null)
         {
             if (dir.GetFiles("*.sln").Length > 0)
