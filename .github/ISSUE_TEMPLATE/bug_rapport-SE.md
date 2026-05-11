@@ -9,7 +9,7 @@ assignees: ''
 ### Beskrivning
 En tydlig och koncis beskrivning av felet.
 
-### Steg för att reproduceras
+### Steg för att reproducera
 1. Gå till '...'
 2. Klicka på '...'
 3. Skrolla ner till '...'
