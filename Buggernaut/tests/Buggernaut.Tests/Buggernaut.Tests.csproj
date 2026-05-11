@@ -4,6 +4,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- AI-genererade testfiler använder nullable-mönster som ger varningar (t.ex. string x = null).
+         NoWarn undertrycker dem utan att påverka Buggernaut.Exercises där nullable är strikt. -->
+    <NoWarn>$(NoWarn);CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8625</NoWarn>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
