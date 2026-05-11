@@ -63,6 +63,56 @@ jobs:
           path: Buggernaut/nupkg/*.nupkg
           if-no-files-found: warn
 
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Clean old nupkg files
+        working-directory: Buggernaut
+        run: rm -f nupkg/*.nupkg
+
+      - name: Pack tool
+        working-directory: Buggernaut
+        run: dotnet pack tools/Buggernaut.Generator/Buggernaut.Generator.csproj -o nupkg --configuration Release -v q
+
+      - name: Read version from csproj
+        id: version
+        run: |
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' Buggernaut/tools/Buggernaut.Generator/Buggernaut.Generator.csproj)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if tag already exists
+        id: tag_check
+        run: |
+          if git ls-remote --tags origin "refs/tags/v${{ steps.version.outputs.version }}" | grep -q .; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
+          body: |
+            See [CHANGELOG.md](https://github.com/discovicke/Buggernaut/blob/main/CHANGELOG.md) for details.
+          files: Buggernaut/nupkg/*.nupkg
+          make_latest: true
+
   package:
     name: Publish app artifacts
     runs-on: ubuntu-latest
