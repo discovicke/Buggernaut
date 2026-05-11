@@ -126,7 +126,7 @@ dotnet buggernaut explain <ClassName>              # förklaring när testerna �
 > **Tips:** Se alla flaggor och kategorier med:
 > 
 >```bash
-> dotnet buggernaut generate --help
+> dotnet buggernaut --help
 > ```
 
 ![CLI-hjälp för generate-kommandot](docs/assets/BuggernautHelp.png)
