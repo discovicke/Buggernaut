@@ -60,7 +60,7 @@ Want to try it without an API key first? Use `--dry-run`.
 
 ---
 
-## Quick start
+## *Quick* start
 
 Run all commands from `Buggernaut/` unless stated otherwise.
 

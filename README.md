@@ -28,7 +28,7 @@ medveten bugg och en tillhörande testfil. Din uppgift är att hitta och fixa bu
 
 Inga webbläsarflikar. Ingen registrering. Allt händer i din editor!
 
-### Snabb demo
+### *Snabb* demo
 
 ![Snabb demo av Buggernaut](docs/assets/BuggernautQuickRun.gif)
 
