@@ -6,7 +6,7 @@ Buggernaut är ett CLI-verktyg som genererar C#-övningar med inbyggda buggar vi
 Tanken är enkel: öppna en fil, hitta buggen, kör testerna, bli bättre på programmering.
 
 Programmet är designat att ge juniora utvecklare chansen att träna på att hitta och fixa buggar i kod, samt förbättra sin
-förståelse för programmeringskoncept utan att behöva lämna sin egna utvecklingsmiljö.
+förståelse för programmeringskoncept utan att behöva lämna sin egen utvecklingsmiljö.
 
 
 > Inspirerat av [ThePrimeagens Kata-Machine](https://github.com/ThePrimeagen/kata-machine).
