@@ -2,5 +2,5 @@
 
 public interface ILlmClient
 {
-    Task<string> GenerateAsync(string systemPrompt, string userPrompt);
+    Task<string> GenerateAsync(string prompt);
 }
