@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [v1.0.2] - 2026-05-11
+
+### Fixed
+- `dotnet buggernaut --help` now works without prefixing `generate`
+- `dotnet buggernaut --list` now works without prefixing `generate`
+- `dotnet buggernaut -h` and `-l` also work at the top level
+- All user-facing help and error text updated from `dotnet run --` to `dotnet buggernaut`
+- Instructions in generated exercise file headers updated to use `dotnet buggernaut hint/explain`
+
+### Added
+- Tests for top-level `--help`, `-h`, `--list`, and `-l`
+
+---
+
 ## [v1.0.1] - 2026-05-11
 
 ### Added
@@ -14,6 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `SECURITY.md`
 - English README (`README-en.md`)
 - Revamped Swedish README (`README.md`)
+- Visual demo assets: `BuggernautQuickRun.gif`, `BuggernautQuickStart.gif`, `BuggernautHelp.png`, `BuggernautDryRun.png`
+- Badges in both READMEs: .NET 10, C#, CLI, contributions welcome, NuGet, license
 
 ---
 
