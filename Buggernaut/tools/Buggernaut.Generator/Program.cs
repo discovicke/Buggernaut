@@ -63,7 +63,8 @@ class Program
         if (apiKeyConfigPath != null && string.IsNullOrEmpty(config[apiKeyConfigPath]))
         {
             Printer.Error($"API-nyckel för {provider} saknas.");
-            Printer.Dim($"Kör: dotnet user-secrets set \"{apiKeyConfigPath}\" \"din-nyckel\"", indent: 1);
+            Printer.Dim($"Kör en gång från tools/Buggernaut.Generator/:", indent: 1);
+            Printer.Dim($"  dotnet user-secrets set \"{apiKeyConfigPath}\" \"din-nyckel\"", indent: 1);
             return;
         }
 
