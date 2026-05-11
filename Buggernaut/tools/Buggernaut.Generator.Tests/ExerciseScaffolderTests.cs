@@ -7,15 +7,20 @@ public class ExerciseScaffolderTests : IDisposable
 {
     private readonly string _tempRoot;
     private readonly ExerciseScaffolder _scaffolder;
+    private readonly TextWriter _originalOut;
 
     public ExerciseScaffolderTests()
     {
+        _originalOut = Console.Out;
+        Console.SetOut(TextWriter.Null);
+
         _tempRoot   = Path.Combine(Path.GetTempPath(), $"BuggernautTests_{Guid.NewGuid():N}");
         _scaffolder = new ExerciseScaffolder(_tempRoot);
     }
 
     public void Dispose()
     {
+        Console.SetOut(_originalOut);
         if (Directory.Exists(_tempRoot))
             Directory.Delete(_tempRoot, recursive: true);
     }
@@ -31,7 +36,6 @@ public class ExerciseScaffolderTests : IDisposable
         Explanation  = "explanation"
     };
 
-    // ── File creation ──────────────────────────────────────────────────────────
 
     [Fact]
     public void Scaffold_CreatesExerciseFileAtCorrectPath()
@@ -60,7 +64,6 @@ public class ExerciseScaffolderTests : IDisposable
         Assert.True(File.Exists(expected));
     }
 
-    // ── File content ───────────────────────────────────────────────────────────
 
     [Fact]
     public void Scaffold_ExerciseFileContainsBuggyCode()
@@ -86,7 +89,6 @@ public class ExerciseScaffolderTests : IDisposable
         Assert.Contains("Calculator", content);
     }
 
-    // ── Namespace sanitization ─────────────────────────────────────────────────
 
     [Fact]
     public void Scaffold_WrongNamespaceInBuggyCode_IsReplacedWithCorrectNamespace()
@@ -132,7 +134,6 @@ public class ExerciseScaffolderTests : IDisposable
         Assert.DoesNotContain("namespace WrongTests", content);
     }
 
-    // ── Class name extraction ──────────────────────────────────────────────────
 
     [Fact]
     public void Scaffold_StaticClass_ExtractsClassNameCorrectly()

@@ -3,9 +3,17 @@ using Xunit;
 
 namespace Buggernaut.Generator.Tests;
 
-public class CliArgumentParserTests
+public class CliArgumentParserTests : IDisposable
 {
-    // ── Defaults ───────────────────────────────────────────────────────────────
+    private readonly TextWriter _originalOut;
+
+    public CliArgumentParserTests()
+    {
+        _originalOut = Console.Out;
+        Console.SetOut(TextWriter.Null);
+    }
+
+    public void Dispose() => Console.SetOut(_originalOut);
 
     [Fact]
     public void Parse_NoArgs_ReturnsDefaultOptions()
@@ -15,7 +23,6 @@ public class CliArgumentParserTests
         Assert.False(options.DryRun);
     }
 
-    // ── Category and difficulty flags ──────────────────────────────────────────
 
     [Fact]
     public void Parse_LongFlags_ParsesCategoryAndDifficulty()
@@ -59,7 +66,6 @@ public class CliArgumentParserTests
         Assert.True(options.DryRun);
     }
 
-    // ── Non-error exits (--help, --list) ───────────────────────────────────────
 
     [Fact]
     public void Parse_HelpFlag_ThrowsNonErrorException()
@@ -88,7 +94,6 @@ public class CliArgumentParserTests
         Assert.False(ex.IsError);
     }
 
-    // ── Error cases ────────────────────────────────────────────────────────────
 
     [Fact]
     public void Parse_UnknownCommand_ThrowsErrorException()

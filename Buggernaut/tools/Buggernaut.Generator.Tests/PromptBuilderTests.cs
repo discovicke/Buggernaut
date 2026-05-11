@@ -1,5 +1,4 @@
 ﻿using Buggernaut.Generator;
-using Xunit;
 
 namespace Buggernaut.Generator.Tests;
 
