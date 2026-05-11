@@ -10,7 +10,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>buggernaut</ToolCommandName>
     <PackageId>Buggernaut</PackageId>
-    <Version>0.0.1</Version>
+    <Version>1.0.1</Version>
     <Description>Genererar C#-övningar med buggar via LLM.</Description>
   </PropertyGroup>
 

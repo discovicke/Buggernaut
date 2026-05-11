@@ -1,58 +1,100 @@
 # Buggernaut
 
-Buggernaut är ett CLI-verktyg som genererar C#-övningar med buggar med hjälp av en valfri LLM-provider. Det är designat för att hjälpa utvecklare att träna på att hitta och fixa buggar i kod, samt att förbättra sin förståelse av olika programmeringskoncept utan att behöva lämna sin egna egna utvecklingsmiljö.
+> ##### Link to the English README file: [README-en.md](README-en.md)
 
-> Buggernauts grundkoncept är inspirerat av [ThePrimeagens Kata-Machine](https://github.com/ThePrimeagen/kata-machine). Tack till ytterligare inspiration från idésprutan [Marcus Lööf](https://github.com/LeafMaster1) som agerat bollplank och samtalat kring progammeringsprojekt och studietekniker.
+Buggernaut är ett CLI-verktyg som genererar C#-övningar med inbyggda buggar via en LLM-provider du själv väljer.
+Tanken är enkel: öppna en fil, hitta buggen, kör testerna, bli bättre på programmering.
+
+Programmet är designat att ge juniora utvecklare chansen att träna på att hitta och fixa buggar i kod, samt förbättra sin
+förståelse för programmeringskoncept utan att behöva lämna sin egen utvecklingsmiljö.
+
+
+> Inspirerat av [ThePrimeagens Kata-Machine](https://github.com/ThePrimeagen/kata-machine).
+> Tack till [Marcus Löf](https://github.com/LeafMaster1) för idéer och bollplank.
+
+---
+## Vad är det här?
+
+Du kör ett kommando. Buggernaut frågar en AI om en C#-övning, skriver ut en `.cs`-fil med en
+medveten bugg och en tillhörande testfil. Din uppgift är att hitta och fixa buggen tills testerna blir gröna.
+
+Inga webbläsarflikar. Ingen registrering. Allt händer i din editor!
+
+---
+
+## Innehåll
+- [Förutsättningar](#förutsättningar)
+- [Snabbstart](#snabbstart)
+- [Daglig användning](#daglig-användning)
+- [Konfiguration](#konfiguration)
+- [Köra tester](#köra-tester)
+- [Vanliga problem](#vanliga-problem)
+- [Vill du bidra?](#vill-du-bidra)
+- [Kontakt](#kontakt)
 
 ---
 
 ## Förutsättningar
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) installerat
-- En API-nyckel från valfri LLM-provider (se nedan)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- En API-nyckel till valfri provider (t.ex. `Gemini`, `OpenAI`, `Anthropic`, `Mistral`)
+
+> `Ollama` fungerar utan API-nyckel, men kräver en lokal server.
+
+Vill du testa utan API-nyckel först? Kör med `--dry-run`, det funkar direkt.
 
 ---
 
-## Kom igång
+## Snabbstart
 
-Allt körs från `Buggernaut/`-mappen.
+Alla kommandon körs från `Buggernaut/` om inget annat står.
 
-### 1. Installera verktyget
+### 1) Installera verktyget
+
 ```bash
 cd Buggernaut
 dotnet tool restore
 ```
 
-### 2. Ange API-nyckel (en gång)
+### 2) Spara API-nyckel (engångsinställning)
 
-Kör från `tools/Buggernaut.Generator/` för att spara din nyckel:
+Kör i `tools/Buggernaut.Generator/`:
+
 ```bash
 cd tools/Buggernaut.Generator
+dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
+```
 
-# Välj din provider:
-dotnet user-secrets set "LLM:Gemini:ApiKey"    "din-nyckel"
+Nyckeln lagras lokalt på din dator och committas aldrig till Git.
+
+Har du en nyckel till en annan leverantör? Byt bara ut `Gemini`:
+
+```bash
 dotnet user-secrets set "LLM:OpenAI:ApiKey"    "din-nyckel"
 dotnet user-secrets set "LLM:Anthropic:ApiKey" "din-nyckel"
 dotnet user-secrets set "LLM:Mistral:ApiKey"   "din-nyckel"
 ```
 
-> Var hittar jag min API-nyckel?
-> - **Gemini** → [aistudio.google.com](https://aistudio.google.com/app/apikey)
-> - **OpenAI** → [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-> - **Anthropic** → [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys)
-> - **Mistral** → [console.mistral.ai](https://console.mistral.ai/)
+Problem att hitta API-nyckeln till din leverantör? Kolla här:
 
-### 3. Generera en övning
+- **Gemini**: <https://aistudio.google.com/app/apikey>
+- **OpenAI**: <https://platform.openai.com/api-keys>
+- **Anthropic**: <https://console.anthropic.com/settings/keys>
+- **Mistral**: <https://console.mistral.ai/>
+
+### 3) Generera din första övning
+
 ```bash
 cd Buggernaut
 dotnet buggernaut generate
 ```
 
+En ny `.cs`-fil dyker upp i `src/Buggernaut.Exercises/`.  
+Öppna den, hitta buggen, fixa den.
+
 ---
 
 ## Daglig användning
-
-Allt från `Buggernaut/`-mappen:
 
 ```bash
 dotnet buggernaut generate                         # generera ny övning
@@ -65,15 +107,17 @@ dotnet buggernaut hint    <ClassName>              # ledtråd när du kört fast
 dotnet buggernaut explain <ClassName>              # förklaring när testerna är gröna
 ```
 
-> **Tips:** `dotnet buggernaut generate --help` visar alla tillgängliga flaggor, kategorier och svårighetsgrader.
+> **Tips:** Se alla flaggor och kategorier med:
+> 
+>```bash
+> dotnet buggernaut generate --help
+> ```
 
 ---
 
 ## Konfiguration
-
-### Välj provider
-
-Öppna `tools/Buggernaut.Generator/appsettings.json` och ändra `Provider`:
+### Byta LLM-leverantör
+Öppna `tools/Buggernaut.Generator/appsettings.json` och ändra `"Provider"`:
 
 ```json
 {
@@ -83,33 +127,79 @@ dotnet buggernaut explain <ClassName>              # förklaring när testerna �
 }
 ```
 
-Tillgängliga providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`
+Tillgängliga providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`. 
+> Saknar du en leverantör? [Skicka in förslag](https://github.com/discovicke/buggernaut/issues) till mig så löser vi det! :)
 
-### Välj modell (valfritt)
+Vill du köra lokalt utan internet? Sätt upp [Ollama](https://ollama.com) och byt till:
+
+```json
+{
+  "LLM": {
+    "Provider": "Ollama",
+    "Ollama": {
+      "BaseUrl": "http://localhost:11434/v1",
+      "Model": "llama3"
+    }
+  }
+}
+```
+#### Valfritt: sätt modell per leverantör:
 
 ```json
 {
   "LLM": {
     "Provider": "Gemini",
-    "Gemini":    { "Model": "gemini-2.5-flash" },
-    "OpenAI":    { "Model": "gpt-4o-mini" },
-    "Anthropic": { "Model": "claude-3-5-haiku-latest" },
-    "Mistral":   { "Model": "mistral-small" },
-    "Ollama":    { "BaseUrl": "http://localhost:11434/v1", "Model": "llama3" }
+    "Gemini": {
+      "Model": "gemini-2.5-flash"
+    },
+    "OpenAI": {
+      "Model": "gpt-4o-mini"
+    },
+    "Anthropic": {
+      "Model": "claude-3-5-haiku-latest"
+    },
+    "Mistral": {
+      "Model": "mistral-small"
+    },
+    "Ollama": {
+      "BaseUrl": "http://localhost:11434/v1",
+      "Model": "llama3"
+    }
   }
 }
 ```
 
-> **Ollama** kräver ingen API-nyckel men behöver en lokal server igång.
+---
+
+## Köra tester
+
+| Kommando                     | Vad som körs                            |
+|------------------------------|-----------------------------------------|
+| `dotnet test exercises.slnf` | Dina övningstester (`Buggernaut.Tests`) |
+| `dotnet test generator.slnf` | Generatorns egna enhetstester           |
+| `dotnet test`                | Alla tester                             |
 
 ---
 
-## Kör testerna
+## Vanliga problem
 
-| Kommando | Vad körs |
-|---|---|
-| `dotnet test exercises.slnf` | **Dina övningar** — enbart `Buggernaut.Tests` |
-| `dotnet test generator.slnf` | Generatorns egna enhetstester |
-| `dotnet test` | Allt |
+**`dotnet buggernaut` hittas inte**
 
-> Kör alltid från `Buggernaut/`-mappen.
+- Kör `dotnet tool restore` i `Buggernaut/`.
+
+**API-nyckel hittas inte**
+
+- Kontrollera att `user-secrets` sattes i `tools/Buggernaut.Generator/`.
+
+**Fel provider eller modell används**
+
+- Kontrollera `tools/Buggernaut.Generator/appsettings.json`.
+
+---
+
+## Vill du bidra?
+
+Kul! Läs [CONTRIBUTING.md](CONTRIBUTING.md) för riktlinjer kring brancher, commits och pull requests. Ingen press eller stress, vi lär oss tillsammans.
+
+## Kontakt
+Vill du nå mig så finns mina kontaktuppgifter på [GitHub](https://github.com/discovicke), eller så slänger du iväg ett [mail](mailto:johanssonviktor@pm.me)!
