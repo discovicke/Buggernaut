@@ -18,7 +18,7 @@ Buggernaut är ett CLI-verktyg som genererar C#-övningar med buggar med hjälp 
 }
 ```
 
-Tillgängliga providers: `Gemini`, `OpenAI`, `Mistral`, `Ollama`
+Tillgängliga providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`
 
 ---
 
@@ -35,6 +35,9 @@ Varje provider har en förinställd standardmodell. Du kan byta modell under res
     },
     "OpenAI": {
       "Model": "gpt-4o-mini"
+    },
+    "Anthropic": {
+      "Model": "claude-3-5-haiku-latest"
     },
     "Mistral": {
       "Model": "mistral-small"
@@ -64,14 +67,18 @@ dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
 # OpenAI
 dotnet user-secrets set "LLM:OpenAI:ApiKey" "din-nyckel"
 
+# Anthropic
+dotnet user-secrets set "LLM:Anthropic:ApiKey" "din-nyckel"
+
 # Mistral
 dotnet user-secrets set "LLM:Mistral:ApiKey" "din-nyckel"
 ```
 
 > Var hittar jag min API-nyckel?
-> - **Gemini** > [aistudio.google.com](https://aistudio.google.com/app/apikey)
-> - **OpenAI** > [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-> - **Mistral** > [console.mistral.ai](https://console.mistral.ai/)
+> - **Gemini** → [aistudio.google.com](https://aistudio.google.com/app/apikey)
+> - **OpenAI** → [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+> - **Anthropic** → [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys)
+> - **Mistral** → [console.mistral.ai](https://console.mistral.ai/)
 
 ---
 
@@ -87,3 +94,6 @@ dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
 # 3. Starta generatorn
 dotnet run
 ```
+
+> **Tips:** Kör `dotnet run -- generate --help` för att snabbt se alla flaggor, kategorier och exempel direkt i terminalen utan att behöva öppna README:n.
+
