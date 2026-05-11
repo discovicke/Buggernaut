@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Buggernaut.Generator.Service.LLM_Clients;
 
-public class GeminiClient(string apiKey, int maxAttempts = 5) : ILlmClient
+public class GeminiClient(string apiKey, string model = "gemini-2.5-flash", int maxAttempts = 5) : ILlmClient
 {
     private static readonly HttpStatusCode[] RetryableStatusCodes =
     [
@@ -18,10 +18,8 @@ public class GeminiClient(string apiKey, int maxAttempts = 5) : ILlmClient
 
     public async Task<string> GenerateAsync(string prompt)
     {
-        var threeUrl =
-            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key={apiKey}";
-        var twoFiveUrl =
-            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+        var url =
+            $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
 
         var body = new
         {
@@ -45,7 +43,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 5) : ILlmClient
             var apiTail = $"Anropar Gemini  –  försök {attempt}/{maxAttempts}";
             using (var apiSpinner = new Spinner("Väntar på API", apiTail))
             {
-                response = await _http.PostAsync(twoFiveUrl, content);
+                response = await _http.PostAsync(url, content);
                 apiSpinner.Stop(success: response.IsSuccessStatusCode);
             }
             Console.WriteLine();
