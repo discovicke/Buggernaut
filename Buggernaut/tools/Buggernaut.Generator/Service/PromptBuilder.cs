@@ -20,12 +20,17 @@ public class PromptBuilder
          Rules:
          - buggyCode: a complete, compilable C# class with exactly ONE intentional bug. Add // TODO: Something is wrong here near the bug.
          - solutionCode: the corrected version of buggyCode.
-         - testCode: a valid xUnit test class. Class name must be [ClassName]Tests. At least 3 [Fact] tests. 
+         - testCode: a valid xUnit test class. Class name must be [ClassName]Tests. At least 3 [Fact] tests.
          - Tests MUST fail on buggyCode and pass on solutionCode.
          - Tests must be internally consistent. All [Fact] tests must agree on the same behavioral contract.
-         - All classes use namespace Buggernaut.Exercises.
+         - buggyCode and solutionCode MUST use namespace Buggernaut.Exercises.
+         - testCode MUST use namespace Buggernaut.Tests (NOT Buggernaut.Exercises or Buggernaut.Exercises.Tests).
          - testCode must use: using Xunit; using Buggernaut.Exercises;
          - No NuGet packages, only System namespace (except Xunit in testCode).
+         - Every class in buggyCode and solutionCode MUST have an XML /// <summary> that describes what the class does in a professional application (e.g. "Used by a billing service to ...").
+         - Every public method in buggyCode and solutionCode MUST have an XML /// <summary> with /// <param> and /// <returns> tags where applicable.
+         - description: 3–4 sentences. Start by describing the real-world context where this class would be used. Then explain the specific problem the student must solve.
+         - explanation: 3–5 sentences. Explain precisely what the bug was, why it caused the wrong behaviour, and what the correct fix is and why it works.
          """;
     
     public static string BuildUserPrompt(ChallengeCategories category, Difficulties difficulty)

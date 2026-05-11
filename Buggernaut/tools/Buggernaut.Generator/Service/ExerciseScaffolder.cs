@@ -31,9 +31,9 @@ public class ExerciseScaffolder
         Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
         Directory.CreateDirectory(Path.GetDirectoryName(solutionPath)!);
 
-        File.WriteAllText(exercisePath, challenge.BuggyCode);
-        File.WriteAllText(testPath, challenge.TestCode);
-        File.WriteAllText(solutionPath, challenge.SolutionCode);
+        File.WriteAllText(exercisePath, SanitizeNamespace(challenge.BuggyCode, "Buggernaut.Exercises"));
+        File.WriteAllText(testPath,     SanitizeNamespace(challenge.TestCode,   "Buggernaut.Tests"));
+        File.WriteAllText(solutionPath, SanitizeNamespace(challenge.SolutionCode, "Buggernaut.Exercises"));
 
         Printer.Ok($"Övning genererad: \"{challenge.Title}\"");
         Printer.H2("Övningsinformation");
@@ -43,6 +43,20 @@ public class ExerciseScaffolder
         Printer.KeyValue("Lösning",  $"solutions/{className}.cs");
         Printer.Blank();
         Printer.Dim("Kör testerna:  dotnet test", indent: 1);
+    }
+
+    /// <summary>
+    /// Ersätter eventuellt felaktigt namespace med det förväntade.
+    /// Hanterar både block-syntax (namespace Foo {}) och fil-scoped (namespace Foo;).
+    /// </summary>
+    private static string SanitizeNamespace(string code, string expectedNamespace)
+    {
+        // Matchar: namespace Whatever.Goes.Here; eller namespace Whatever.Goes.Here {
+        return System.Text.RegularExpressions.Regex.Replace(
+            code,
+            @"namespace\s+[\w.]+(\s*[;{])",
+            $"namespace {expectedNamespace}$1"
+        );
     }
 
     /// <summary>
