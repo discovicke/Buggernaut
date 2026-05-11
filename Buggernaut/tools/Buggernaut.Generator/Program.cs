@@ -31,8 +31,11 @@ class Program
             return;
         }
 
+        var solutionRoot = SolutionRootFinder.Find();
+        var appSettingsPath = Path.Combine(solutionRoot, "tools", "Buggernaut.Generator", "appsettings.json");
+
         var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: true)
+            .AddJsonFile(appSettingsPath, optional: true)
             .AddUserSecrets<Program>()
             .Build();
 
