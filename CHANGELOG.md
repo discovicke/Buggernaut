@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [v1.0.0] – 2026-05-10
+## [v1.0.0] - 2026-05-10
 
 First stable release. Packaged as a .NET global tool and published via GitHub Actions.
 
