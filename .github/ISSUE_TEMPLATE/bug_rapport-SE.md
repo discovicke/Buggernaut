@@ -1,6 +1,6 @@
 ﻿---
 name: Bug-rapport
-about: Skapa en rapport för att hjälpa mig förbättra projektet och eliminera oönskade beteenden.
+about: Skapa en rapport för att hjälpa mig att förbättra projektet och eliminera oönskade beteenden.
 title: ''
 labels: 'bug'
 assignees: ''
