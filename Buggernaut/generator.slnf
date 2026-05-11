@@ -1,0 +1,10 @@
+﻿{
+  "solution": {
+    "path": "Buggernaut.sln",
+    "projects": [
+      "tools\\Buggernaut.Generator\\Buggernaut.Generator.csproj",
+      "tools\\Buggernaut.Generator.Tests\\Buggernaut.Generator.Tests.csproj"
+    ]
+  }
+}
+
