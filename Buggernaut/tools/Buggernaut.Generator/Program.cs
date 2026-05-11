@@ -40,11 +40,12 @@ class Program
         var provider = config["LLM:Provider"] ?? "Gemini";
         var apiKeyConfigPath = provider switch
         {
-            "Gemini"  => "LLM:Gemini:ApiKey",
-            "OpenAI"  => "LLM:OpenAI:ApiKey",
-            "Mistral" => "LLM:Mistral:ApiKey",
-            "Ollama"  => null, // Ollama kräver ingen API-nyckel
-            _         => null
+            "Gemini"    => "LLM:Gemini:ApiKey",
+            "OpenAI"    => "LLM:OpenAI:ApiKey",
+            "Anthropic" => "LLM:Anthropic:ApiKey",
+            "Mistral"   => "LLM:Mistral:ApiKey",
+            "Ollama"    => null, // Ollama kräver ingen API-nyckel
+            _           => null
         };
 
         if (apiKeyConfigPath != null && string.IsNullOrEmpty(config[apiKeyConfigPath]))

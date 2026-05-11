@@ -24,6 +24,10 @@ public static class LlmClientFactory
                 config["LLM:Mistral:ApiKey"]!,
                 config["LLM:Mistral:Model"] ?? "mistral-small"),
 
+            "Anthropic" => new AnthropicClient(
+                config["LLM:Anthropic:ApiKey"]!,
+                config["LLM:Anthropic:Model"] ?? "claude-3-5-haiku-latest"),
+
             "Ollama" => new OpenAiCompatibleClient(
                 config["LLM:Ollama:BaseUrl"] ?? "http://localhost:11434/v1",
                 "ollama",
