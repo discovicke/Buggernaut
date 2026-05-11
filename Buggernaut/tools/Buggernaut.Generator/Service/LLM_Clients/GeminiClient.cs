@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Text.Json;
 
-namespace Buggernaut.Generator;
+namespace Buggernaut.Generator.Service.LLM_Clients;
 
-public class GeminiClient(string apiKey, int maxAttempts = 5)
+public class GeminiClient(string apiKey, int maxAttempts = 5) : ILlmClient
 {
     private static readonly HttpStatusCode[] RetryableStatusCodes =
     [
