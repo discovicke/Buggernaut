@@ -1,5 +1,4 @@
 ﻿using Buggernaut.Generator;
-using Buggernaut.Generator.Service.LLM_Clients;
 using Microsoft.Extensions.Configuration;
 
 class Program
@@ -21,6 +20,7 @@ class Program
         }
 
         var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true)
             .AddUserSecrets<Program>()
             .Build();
 
@@ -37,18 +37,26 @@ class Program
             return;
         }
 
-        var apiKey = config["Gemini:ApiKey"];
-
-        if (string.IsNullOrEmpty(apiKey))
+        var provider = config["LLM:Provider"] ?? "Gemini";
+        var apiKeyConfigPath = provider switch
         {
-            Printer.Error("API-nyckel saknas.");
-            Printer.Dim("Kör: dotnet user-secrets set \"Gemini:ApiKey\" \"din-nyckel\"", indent: 1);
+            "Gemini"  => "LLM:Gemini:ApiKey",
+            "OpenAI"  => "LLM:OpenAI:ApiKey",
+            "Mistral" => "LLM:Mistral:ApiKey",
+            "Ollama"  => null, // Ollama kräver ingen API-nyckel
+            _         => null
+        };
+
+        if (apiKeyConfigPath != null && string.IsNullOrEmpty(config[apiKeyConfigPath]))
+        {
+            Printer.Error($"API-nyckel för {provider} saknas.");
+            Printer.Dim($"Kör: dotnet user-secrets set \"{apiKeyConfigPath}\" \"din-nyckel\"", indent: 1);
             return;
         }
 
         Printer.H2($"Genererar  {options.Category}  ({options.Difficulty})");
 
-        var client = new GeminiClient(apiKey);
+        var client = LlmClientFactory.Create(config);
         var prompt = PromptBuilder.BuildUserPrompt(options.Category, options.Difficulty);
 
         const int maxValidationAttempts = 5;
