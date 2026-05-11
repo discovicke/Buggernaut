@@ -1,6 +1,6 @@
 ﻿---
 name: Bug report
-about: Create a bug report to help me improve the app and stop unwanted behaviour.
+about: Create a bug report to help me improve the app and stop unwanted behavior.
 title: ''
 labels: 'bug'
 assignees: ''
