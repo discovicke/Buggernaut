@@ -20,7 +20,7 @@ I'll aim to respond within a few days and keep you updated on the fix.
 
 ## API keys and secrets
 
-Buggernaut uses `.NET user-secrets` to store API keys locally. Keys are **never** committed to Git.
+Buggernaut uses `dotnet user-secrets` to store API keys locally. Keys are **never** committed to Git.
 
 If you accidentally commit a key, rotate it immediately with your provider:
 
