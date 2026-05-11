@@ -202,4 +202,4 @@ Vill du köra lokalt utan internet? Sätt upp [Ollama](https://ollama.com) och b
 Kul! Läs [CONTRIBUTING.md](CONTRIBUTING.md) för riktlinjer kring brancher, commits och pull requests. Ingen press eller stress, vi lär oss tillsammans.
 
 ## Kontakt
-Vill du nå mig så finns mina kontaktuppgifter på [Github](https://github.com/discovicke), eller så slänger du iväg ett [mail](mailto:johanssonviktor@pm.me)!
+Vill du nå mig så finns mina kontaktuppgifter på [GitHub](https://github.com/discovicke), eller så slänger du iväg ett [mail](mailto:johanssonviktor@pm.me)!
