@@ -2,7 +2,12 @@
 
 public class ExerciseScaffolder
 {
-    private readonly string _solutionRoot = FindSolutionRoot();
+    private readonly string _solutionRoot;
+
+    public ExerciseScaffolder(string? outputRoot = null)
+    {
+        _solutionRoot = outputRoot ?? FindSolutionRoot();
+    }
 
     private static string FindSolutionRoot()
     {
