@@ -8,6 +8,8 @@ public static class CliArgumentParser
 {
     public class GenerateOptions
     {
+        public Command Command { get; set; } = Command.Generate;
+        public string TargetClassName { get; set; } = "";
         public ChallengeCategories Category { get; set; } = ChallengeCategories.Bug;
         public Difficulties Difficulty { get; set; } = Difficulties.Medium;
         public bool DryRun { get; set; } = false;
@@ -18,8 +20,24 @@ public static class CliArgumentParser
         if (args.Length == 0)
             return GetDefaults();
 
+        if (args[0] == "hint" || args[0] == "explain")
+        {
+            if (args.Length < 2)
+                throw new CliArgumentException(
+                    $"{args[0]} kräver ett klassnamn. Exempel: dotnet run -- {args[0]} OrderValidator");
+
+            return new GenerateOptions
+            {
+                Command = args[0] == "hint" 
+                    ? Command.Hint 
+                    : Command.Explain,
+                TargetClassName = args[1]
+            };
+        }
+
         if (args[0] != "generate")
-            throw new CliArgumentException($"Okänt kommando: '{args[0]}'. Använd: dotnet run -- generate [flaggor]");
+            throw new CliArgumentException(
+                $"Okänt kommando: '{args[0]}'. Använd: dotnet run -- generate [flaggor]");
 
         var options = GetDefaults();
 
@@ -121,7 +139,9 @@ public static class CliArgumentParser
         Printer.Line("dotnet run -- generate --list", indent: 1);
 
         Printer.H2("Kör dina övningar");
-        Printer.Line("dotnet test exercises.slnf", indent: 1);
+        Printer.Line("dotnet test exercises.slnf                   (från Buggernaut/)", indent: 1);
+        Printer.Line("dotnet run -- hint    <ClassName>", indent: 1);
+        Printer.Line("dotnet run -- explain <ClassName>", indent: 1);
         Printer.Blank();
     }
 

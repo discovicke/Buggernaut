@@ -18,6 +18,18 @@ class Program
                 Printer.Error(ex.Message);
             return;
         }
+        
+        if (options.Command == Command.Hint)
+        {
+            MetaReader.ShowHint(options.TargetClassName);
+            return;
+        }
+
+        if (options.Command == Command.Explain)
+        {
+            MetaReader.ShowExplanation(options.TargetClassName);
+            return;
+        }
 
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: true)
