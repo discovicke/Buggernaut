@@ -114,11 +114,14 @@ public static class CliArgumentParser
         Printer.Line(string.Join("  |  ", Enum.GetNames(typeof(Difficulties))), indent: 1);
 
         Printer.H2("Exempel");
-        Printer.Dim("dotnet run -- generate", indent: 1);
-        Printer.Dim("dotnet run -- generate --category Bug --difficulty Hard", indent: 1);
-        Printer.Dim("dotnet run -- generate -c LINQ -d Easy", indent: 1);
-        Printer.Dim("dotnet run -- generate --dry-run --category AlgorithmRiddle", indent: 1);
-        Printer.Dim("dotnet run -- generate --list", indent: 1);
+        Printer.Line("dotnet run -- generate", indent: 1);
+        Printer.Line("dotnet run -- generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Line("dotnet run -- generate -c LINQ -d Easy", indent: 1);
+        Printer.Line("dotnet run -- generate --dry-run --category AlgorithmRiddle", indent: 1);
+        Printer.Line("dotnet run -- generate --list", indent: 1);
+
+        Printer.H2("Kör dina övningar");
+        Printer.Line("dotnet test exercises.slnf", indent: 1);
         Printer.Blank();
     }
 
