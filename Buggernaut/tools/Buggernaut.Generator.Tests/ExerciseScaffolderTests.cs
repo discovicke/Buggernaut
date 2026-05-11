@@ -160,5 +160,32 @@ public class ExerciseScaffolderTests : IDisposable
 
         Assert.True(File.Exists(Path.Combine(_tempRoot, "src", "Buggernaut.Exercises", "UnknownExercise.cs")));
     }
+    
+    [Fact]
+    public void Scaffold_CreatesMetaFileAtCorrectPath()
+    {
+        _scaffolder.Scaffold(MakeChallenge());
+        Assert.True(File.Exists(Path.Combine(_tempRoot, "solutions", "Calculator.meta.json")));
+    }
+
+    [Fact]
+    public void Scaffold_MetaFileContainsHintAndExplanation()
+    {
+        _scaffolder.Scaffold(MakeChallenge());
+        var json = File.ReadAllText(Path.Combine(_tempRoot, "solutions", "Calculator.meta.json"));
+        Assert.Contains("hint", json, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("explanation", json, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Scaffold_ExerciseFileContainsDescriptionHeader()
+    {
+        _scaffolder.Scaffold(MakeChallenge());
+        var content = File.ReadAllText(
+            Path.Combine(_tempRoot, "src", "Buggernaut.Exercises", "Calculator.cs"));
+        Assert.Contains("Test challenge", content); // title från MakeChallenge()
+        Assert.Contains("A test.", content);        // description från MakeChallenge()
+        Assert.Contains("buggernaut hint Calculator", content);
+    }
 }
 

@@ -18,6 +18,18 @@ class Program
                 Printer.Error(ex.Message);
             return;
         }
+        
+        if (options.Command == Command.Hint)
+        {
+            MetaReader.ShowHint(options.TargetClassName);
+            return;
+        }
+
+        if (options.Command == Command.Explain)
+        {
+            MetaReader.ShowExplanation(options.TargetClassName);
+            return;
+        }
 
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: true)
@@ -51,7 +63,8 @@ class Program
         if (apiKeyConfigPath != null && string.IsNullOrEmpty(config[apiKeyConfigPath]))
         {
             Printer.Error($"API-nyckel för {provider} saknas.");
-            Printer.Dim($"Kör: dotnet user-secrets set \"{apiKeyConfigPath}\" \"din-nyckel\"", indent: 1);
+            Printer.Dim($"Kör en gång från tools/Buggernaut.Generator/:", indent: 1);
+            Printer.Dim($"  dotnet user-secrets set \"{apiKeyConfigPath}\" \"din-nyckel\"", indent: 1);
             return;
         }
 

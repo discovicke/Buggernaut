@@ -6,6 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>6445d21b-79f9-40b5-82f1-575818dab37c</UserSecretsId>
+    <!-- Tool packaging -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>buggernaut</ToolCommandName>
+    <PackageId>Buggernaut</PackageId>
+    <Version>0.0.1</Version>
+    <Description>Genererar C#-övningar med buggar via LLM.</Description>
   </PropertyGroup>
 
   <ItemGroup>
