@@ -1,9 +1,10 @@
 ﻿using System.Net;
+using System.Text;
 using System.Text.Json;
 
-namespace Buggernaut.Generator;
+namespace Buggernaut.Generator.Service.LLM_Clients;
 
-public class GeminiClient(string apiKey, int maxAttempts = 5)
+public class AnthropicClient(string apiKey, string model = "claude-3-5-haiku-latest", int maxAttempts = 5) : ILlmClient
 {
     private static readonly HttpStatusCode[] RetryableStatusCodes =
     [
@@ -14,24 +15,26 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
         HttpStatusCode.InternalServerError
     ];
 
-    private readonly HttpClient _http = new();
+    private readonly HttpClient _http = new()
+    {
+        BaseAddress = new Uri("https://api.anthropic.com/v1/")
+    };
 
     public async Task<string> GenerateAsync(string prompt)
     {
-        var threeUrl =
-            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key={apiKey}";
-        var twoFiveUrl =
-            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+        _http.DefaultRequestHeaders.Remove("x-api-key");
+        _http.DefaultRequestHeaders.Add("x-api-key", apiKey);
+        _http.DefaultRequestHeaders.Remove("anthropic-version");
+        _http.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
 
         var body = new
         {
-            system_instruction = new
+            model,
+            max_tokens = 8192,
+            system = PromptBuilder.SystemPrompt,
+            messages = new[]
             {
-                parts = new[] { new { text = PromptBuilder.SystemPrompt } }
-            },
-            contents = new[]
-            {
-                new { parts = new[] { new { text = prompt } } }
+                new { role = "user", content = prompt }
             }
         };
 
@@ -39,27 +42,24 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 
         for (int attempt = 1; attempt <= maxAttempts; attempt++)
         {
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response;
-            var apiTail = $"Anropar Gemini  –  försök {attempt}/{maxAttempts}";
+            var apiTail = $"Anropar {model}  –  försök {attempt}/{maxAttempts}";
             using (var apiSpinner = new Spinner("Väntar på API", apiTail))
             {
-                response = await _http.PostAsync(twoFiveUrl, content);
+                response = await _http.PostAsync("messages", content);
                 apiSpinner.Stop(success: response.IsSuccessStatusCode);
             }
             Console.WriteLine();
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                using var document = JsonDocument.Parse(result);
-                return document.RootElement
-                    .GetProperty("candidates")
-                    .EnumerateArray().First()
-                    .GetProperty("content")
-                    .GetProperty("parts").EnumerateArray().First()
-                    .GetProperty("text").GetString() ?? "";
+                using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+                return doc.RootElement
+                    .GetProperty("content")[0]
+                    .GetProperty("text")
+                    .GetString() ?? "";
             }
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -67,8 +67,8 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                var body401 = await response.Content.ReadAsStringAsync();
-                throw new Exception($"400 Bad Request: {body401}");
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"400 Bad Request: {errorBody}");
             }
 
             if (!RetryableStatusCodes.Contains(response.StatusCode))
@@ -93,7 +93,7 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
             Console.WriteLine();
         }
 
-        throw new Exception($"Lyckades inte generera Gemini-respons efter {maxAttempts} försök.");
+        throw new Exception($"Lyckades inte generera Anthropic-respons efter {maxAttempts} försök.");
     }
 
     private static double GetWaitSeconds(HttpResponseMessage response, int attempt)
@@ -119,16 +119,13 @@ public class GeminiClient(string apiKey, int maxAttempts = 5)
     private static async Task WaitWithSpinner(string spinnerText, string warnText, double totalSeconds)
     {
         var remaining = (int)Math.Ceiling(totalSeconds);
-
-        using (var spinner = new Spinner(spinnerText, warnText))
+        using var spinner = new Spinner(spinnerText, warnText);
+        while (remaining > 0)
         {
-            while (remaining > 0)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                remaining--;
-            }
-
-            spinner.Stop(success: false);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            remaining--;
         }
+        spinner.Stop(success: false);
     }
 }
+
