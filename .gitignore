@@ -17,7 +17,6 @@ Buggernaut/solutions/*
 Buggernaut/tests/*
 Buggernaut/src/*
 
-Buggernaut/nupkg/*.nupkg
 
 **/appsettings.Local.json
 **/appsettings.Development.json

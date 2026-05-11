@@ -28,6 +28,9 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Pack tool
+        run: dotnet pack tools/Buggernaut.Generator/Buggernaut.Generator.csproj -o nupkg --configuration Release -v q
+
       - name: Restore
         run: dotnet restore Buggernaut.sln
 
