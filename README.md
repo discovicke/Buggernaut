@@ -2,17 +2,20 @@
 
 Buggernaut är ett CLI-verktyg som genererar C#-övningar med buggar med hjälp av en valfri LLM-provider.
 
+#### Inspiration
+Inspiration från och tack till [ThePrimeagen's Kata-Machine](https://github.com/ThePrimeagen/kata-machine) samt alla samtal med [Marcus Lööf](https://github.com/LeafMaster1) kring studietekniker och programmering.
+
 ---
 
 ## Kör testerna
 
 Buggernaut innehåller två typer av tester som hålls separata med solution-filter:
 
-| Kommando | Vad körs |
-|---|---|
-| `dotnet test exercises.slnf` | **Dina övningar** — enbart `Buggernaut.Tests` |
-| `dotnet test generator.slnf` | Generatorns egna enhetstester |
-| `dotnet test` | Allt — båda testprojekten |
+| Kommando | Vad körs                                      |
+|---|-----------------------------------------------|
+| `dotnet test exercises.slnf` | **Dina övningar** - enbart `Buggernaut.Tests` |
+| `dotnet test generator.slnf` | Generatorns egna enhetstester                 |
+| `dotnet test` | Allt - båda testprojekten                     |
 
 > Kör alltid från `Buggernaut/`-mappen.
 
