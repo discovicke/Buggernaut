@@ -28,6 +28,9 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Clean old nupkg files
+        run: rm -f nupkg/*.nupkg
+
       - name: Pack tool
         run: dotnet pack tools/Buggernaut.Generator/Buggernaut.Generator.csproj -o nupkg --configuration Release -v q
 

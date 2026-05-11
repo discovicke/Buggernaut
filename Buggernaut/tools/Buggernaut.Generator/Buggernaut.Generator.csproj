@@ -6,16 +6,39 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>6445d21b-79f9-40b5-82f1-575818dab37c</UserSecretsId>
+
     <!-- Tool packaging -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>buggernaut</ToolCommandName>
     <PackageId>Buggernaut</PackageId>
     <Version>1.0.2</Version>
-    <Description>Genererar C#-övningar med buggar via LLM.</Description>
+    <Description>A CLI tool that generates C# debugging exercises with intentional bugs via your preferred LLM provider. Practice finding and fixing bugs without leaving your editor.</Description>
+
+    <!-- Authorship -->
+    <Authors>discovicke</Authors>
+    <Copyright>Copyright © 2026 Viktor Johansson</Copyright>
+
+    <!-- Repository -->
+    <PackageProjectUrl>https://github.com/discovicke/Buggernaut</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/discovicke/Buggernaut</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Discoverability -->
+    <PackageTags>cli;dotnet;exercises;debugging;learning;llm;csharp;tool</PackageTags>
+
+    <!-- License and readme -->
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README-en.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.7" />
+  </ItemGroup>
+
+  <!-- Include license and readme in the package -->
+  <ItemGroup>
+    <None Include="../../../LICENSE.md" Pack="true" PackagePath="/" />
+    <None Include="../../../README-en.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>
