@@ -28,6 +28,10 @@ Your task is to find and fix the bug until the tests are green.
 
 No browser tabs. No sign-up. Everything happens in your editor.
 
+### Quick demo
+
+![Quick demo of Buggernaut](docs/assets/BuggernautQuickRun.gif)
+
 ---
 
 ## Contents
@@ -51,6 +55,8 @@ No browser tabs. No sign-up. Everything happens in your editor.
 > `Ollama` works without an API key, but requires a local server.
 
 Want to try it without an API key first? Use `--dry-run`.
+
+![Dry run without an API key](docs/assets/BuggernautDryRun.png)
 
 ---
 
@@ -101,6 +107,8 @@ dotnet buggernaut generate
 A new `.cs` file appears in `src/Buggernaut.Exercises/`.
 Open it, find the bug, and fix it.
 
+![Quick start with a generated exercise](docs/assets/BuggernautQuickStart.gif)
+
 ---
 
 ## Daily usage
@@ -121,6 +129,8 @@ dotnet buggernaut explain <ClassName>              # get explanation when tests 
 >```bash
 > dotnet buggernaut generate --help
 >```
+
+![CLI help for the generate command](docs/assets/BuggernautHelp.png)
 
 ---
 

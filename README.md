@@ -2,7 +2,7 @@
 
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/download) 
 [![C%23](https://img.shields.io/badge/language-C%23-239120?style=flat-square&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/) 
-[![CLI](https://img.shields.io/badge/type-CLI-0A7EA4?style=flat-square)](#vad-ar-det-har) 
+[![CLI](https://img.shields.io/badge/type-CLI-0A7EA4?style=flat-square)](#vad-är-det-här) 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square&logo=github)](CONTRIBUTING.md) 
 [![NuGet](https://img.shields.io/badge/NuGet-package-004880?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Buggernaut) 
 [![License: WTFPL v2](https://img.shields.io/badge/license-WTFPL%20v2-red?style=flat-square)](LICENSE.md)
@@ -20,12 +20,17 @@ förståelse för programmeringskoncept utan att behöva lämna sin egen utveckl
 > Tack till [Marcus Löf](https://github.com/LeafMaster1) för idéer och bollplank.
 
 ---
+<a id="vad-ar-det-har"></a>
 ## Vad är det här?
 
 Du kör ett kommando. Buggernaut frågar en AI om en C#-övning, skriver ut en `.cs`-fil med en
 medveten bugg och en tillhörande testfil. Din uppgift är att hitta och fixa buggen tills testerna blir gröna.
 
 Inga webbläsarflikar. Ingen registrering. Allt händer i din editor!
+
+### Snabb demo
+
+![Snabb demo av Buggernaut](docs/assets/BuggernautQuickRun.gif)
 
 ---
 
@@ -49,6 +54,8 @@ Inga webbläsarflikar. Ingen registrering. Allt händer i din editor!
 > `Ollama` fungerar utan API-nyckel, men kräver en lokal server.
 
 Vill du testa utan API-nyckel först? Kör med `--dry-run`, det funkar direkt.
+
+![Dry run utan API-nyckel](docs/assets/BuggernautDryRun.png)
 
 ---
 
@@ -99,6 +106,8 @@ dotnet buggernaut generate
 En ny `.cs`-fil dyker upp i `src/Buggernaut.Exercises/`.  
 Öppna den, hitta buggen, fixa den.
 
+![Snabbstart med genererad övning](docs/assets/BuggernautQuickStart.gif)
+
 ---
 
 ## Daglig användning
@@ -119,6 +128,8 @@ dotnet buggernaut explain <ClassName>              # förklaring när testerna �
 >```bash
 > dotnet buggernaut generate --help
 > ```
+
+![CLI-hjälp för generate-kommandot](docs/assets/BuggernautHelp.png)
 
 ---
 
