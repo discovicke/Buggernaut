@@ -77,10 +77,28 @@ public class CliArgumentParserTests : IDisposable
     }
 
     [Fact]
+    public void Parse_TopLevelHelpFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["--help"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
     public void Parse_ShortHelpFlag_ThrowsNonErrorException()
     {
         var ex = Assert.Throws<CliArgumentException>(
             () => CliArgumentParser.Parse(["generate", "-h"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_TopLevelShortHelpFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["-h"]));
 
         Assert.False(ex.IsError);
     }
