@@ -112,6 +112,33 @@ public class CliArgumentParserTests : IDisposable
         Assert.False(ex.IsError);
     }
 
+    [Fact]
+    public void Parse_TopLevelListFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["--list"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_ShortListFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["generate", "-l"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_TopLevelShortListFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["-l"]));
+
+        Assert.False(ex.IsError);
+    }
+
 
     [Fact]
     public void Parse_UnknownCommand_ThrowsErrorException()
@@ -169,4 +196,3 @@ public class CliArgumentParserTests : IDisposable
         Assert.Contains("Extreme", ex.Message);
     }
 }
-
