@@ -8,6 +8,8 @@ public static class CliArgumentParser
 {
     public class GenerateOptions
     {
+        public Command Command { get; set; } = Command.Generate;
+        public string TargetClassName { get; set; } = "";
         public ChallengeCategories Category { get; set; } = ChallengeCategories.Bug;
         public Difficulties Difficulty { get; set; } = Difficulties.Medium;
         public bool DryRun { get; set; } = false;
@@ -18,8 +20,24 @@ public static class CliArgumentParser
         if (args.Length == 0)
             return GetDefaults();
 
+        if (args[0] == "hint" || args[0] == "explain")
+        {
+            if (args.Length < 2)
+                throw new CliArgumentException(
+                    $"{args[0]} kräver ett klassnamn. Exempel: dotnet run -- {args[0]} OrderValidator");
+
+            return new GenerateOptions
+            {
+                Command = args[0] == "hint" 
+                    ? Command.Hint 
+                    : Command.Explain,
+                TargetClassName = args[1]
+            };
+        }
+
         if (args[0] != "generate")
-            throw new CliArgumentException($"Okänt kommando: '{args[0]}'. Använd: dotnet run -- generate [flaggor]");
+            throw new CliArgumentException(
+                $"Okänt kommando: '{args[0]}'. Använd: dotnet run -- generate [flaggor]");
 
         var options = GetDefaults();
 
@@ -96,9 +114,8 @@ public static class CliArgumentParser
 
     private static void PrintHelp()
     {
-
         Printer.H2("Användning");
-        Printer.Line("dotnet run -- generate [flaggor]", indent: 1);
+        Printer.Line("buggernaut generate [flaggor]", indent: 1);
 
         Printer.H2("Flaggor");
         Printer.Flag("--category, -c <category>",    "Typ av övning");
@@ -114,14 +131,16 @@ public static class CliArgumentParser
         Printer.Line(string.Join("  |  ", Enum.GetNames(typeof(Difficulties))), indent: 1);
 
         Printer.H2("Exempel");
-        Printer.Line("dotnet run -- generate", indent: 1);
-        Printer.Line("dotnet run -- generate --category Bug --difficulty Hard", indent: 1);
-        Printer.Line("dotnet run -- generate -c LINQ -d Easy", indent: 1);
-        Printer.Line("dotnet run -- generate --dry-run --category AlgorithmRiddle", indent: 1);
-        Printer.Line("dotnet run -- generate --list", indent: 1);
+        Printer.Dim("buggernaut generate", indent: 1);
+        Printer.Dim("buggernaut generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Dim("buggernaut generate -c LINQ -d Easy", indent: 1);
+        Printer.Dim("buggernaut generate --dry-run", indent: 1);
+        Printer.Dim("buggernaut generate --list", indent: 1);
 
         Printer.H2("Kör dina övningar");
-        Printer.Line("dotnet test exercises.slnf", indent: 1);
+        Printer.Dim("dotnet test exercises.slnf", indent: 1);
+        Printer.Dim("buggernaut hint    <ClassName>", indent: 1);
+        Printer.Dim("buggernaut explain <ClassName>", indent: 1);
         Printer.Blank();
     }
 
@@ -137,8 +156,8 @@ public static class CliArgumentParser
             Printer.Line($"  {name}");
 
         Printer.H2("Exempel");
-        Printer.Dim("dotnet run -- generate --category Bug --difficulty Hard", indent: 1);
-        Printer.Dim("dotnet run -- generate -c LINQ -d Easy", indent: 1);
+        Printer.Dim("buggernaut generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Dim("buggernaut generate -c LINQ -d Easy", indent: 1);
         Printer.Blank();
     }
 }
