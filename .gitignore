@@ -17,6 +17,7 @@ Buggernaut/solutions/*
 Buggernaut/tests/*
 Buggernaut/src/*
 
+
 **/appsettings.Local.json
 **/appsettings.Development.json
 **/*.env
