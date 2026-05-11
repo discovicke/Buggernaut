@@ -1,5 +1,12 @@
 # Buggernaut
 
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/download) 
+[![C%23](https://img.shields.io/badge/language-C%23-239120?style=flat-square&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/) 
+[![CLI](https://img.shields.io/badge/type-CLI-0A7EA4?style=flat-square)](#vad-ar-det-har) 
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square&logo=github)](CONTRIBUTING.md) 
+[![NuGet](https://img.shields.io/badge/NuGet-package-004880?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Buggernaut) 
+[![License: WTFPL v2](https://img.shields.io/badge/license-WTFPL%20v2-red?style=flat-square)](LICENSE.md)
+
 > ##### Link to the English README file: [README-en.md](README-en.md)
 
 Buggernaut är ett CLI-verktyg som genererar C#-övningar med inbyggda buggar via en LLM-provider du själv väljer.

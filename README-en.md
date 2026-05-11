@@ -1,11 +1,19 @@
 ﻿# Buggernaut
 
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/download) 
+[![C%23](https://img.shields.io/badge/language-C%23-239120?style=flat-square&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/) 
+[![CLI](https://img.shields.io/badge/type-CLI-0A7EA4?style=flat-square)](#what-is-this) 
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square&logo=github)](CONTRIBUTING.md) 
+[![NuGet](https://img.shields.io/badge/NuGet-package-004880?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Buggernaut) 
+[![License: WTFPL v2](https://img.shields.io/badge/license-WTFPL%20v2-red?style=flat-square)](LICENSE.md)
+
 > ##### Link to the Swedish README file: [README.md](README.md)
 
-Buggernaut is a CLI tool that generates C# exercises with built-in bugs through an LLM provider of your choice.
+Buggernaut is a CLI tool that generates C# exercises with built-in bugs through an LLM provider of your choice.  
 The idea is simple: open a file, find the bug, run the tests, get better at programming.
 
-The project is designed to give junior developers a practical way to train bug hunting and bug fixing, while building a stronger understanding of programming concepts without leaving their own development environment.
+The project is designed to give junior developers a practical way to train bug hunting and bug fixing, while building a
+stronger understanding of programming concepts without leaving their own development environment.
 
 > Inspired by [ThePrimeagen's Kata-Machine](https://github.com/ThePrimeagen/kata-machine).
 > Thanks to [Marcus Loof](https://github.com/LeafMaster1) for ideas and feedback.
@@ -14,7 +22,8 @@ The project is designed to give junior developers a practical way to train bug h
 
 ## What is this?
 
-You run a command. Buggernaut asks an AI for a C# exercise, writes a `.cs` file with an intentional bug, and adds a matching test file.
+You run a command. Buggernaut asks an AI for a C# exercise, writes a `.cs` file with an intentional bug, and adds a
+matching test file.
 Your task is to find and fix the bug until the tests are green.
 
 No browser tabs. No sign-up. Everything happens in your editor.
@@ -176,11 +185,11 @@ Want to run fully local without internet? Set up [Ollama](https://ollama.com) an
 
 ## Run tests
 
-| Command | What it runs |
-|---|---|
+| Command                      | What it runs                             |
+|------------------------------|------------------------------------------|
 | `dotnet test exercises.slnf` | Your exercise tests (`Buggernaut.Tests`) |
-| `dotnet test generator.slnf` | Generator's own unit tests |
-| `dotnet test` | All tests |
+| `dotnet test generator.slnf` | Generator's own unit tests               |
+| `dotnet test`                | All tests                                |
 
 ---
 
@@ -207,5 +216,5 @@ No pressure, no stress - we learn together.
 
 ## Contact
 
-Want to reach me? You can find contact details on [GitHub](https://github.com/discovicke), or send an [email](mailto:johanssonviktor@pm.me).
-
+Want to reach me? You can find contact details on [GitHub](https://github.com/discovicke), or send
+an [email](mailto:johanssonviktor@pm.me).
