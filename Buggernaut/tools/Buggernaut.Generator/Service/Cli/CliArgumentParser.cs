@@ -1,8 +1,8 @@
 ﻿namespace Buggernaut.Generator;
 
 /// <summary>
-/// Parses and validates CLI arguments for the generate command.
-/// Usage: dotnet run -- generate --category --difficulty
+/// Parses and validates CLI arguments for Buggernaut commands.
+/// Usage: dotnet buggernaut [generate] [flags]
 /// </summary>
 public static class CliArgumentParser
 {
@@ -20,11 +20,23 @@ public static class CliArgumentParser
         if (args.Length == 0)
             return GetDefaults();
 
+        if (args[0] == "--help" || args[0] == "-h")
+        {
+            PrintHelp();
+            throw new CliArgumentException("Visat hjälp.", isError: false);
+        }
+
+        if (args[0] == "--list" || args[0] == "-l")
+        {
+            PrintList();
+            throw new CliArgumentException("Visade lista.", isError: false);
+        }
+
         if (args[0] == "hint" || args[0] == "explain")
         {
             if (args.Length < 2)
                 throw new CliArgumentException(
-                    $"{args[0]} kräver ett klassnamn. Exempel: dotnet run -- {args[0]} OrderValidator");
+                    $"{args[0]} kräver ett klassnamn. Exempel: dotnet buggernaut {args[0]} OrderValidator");
 
             return new GenerateOptions
             {
@@ -37,7 +49,7 @@ public static class CliArgumentParser
 
         if (args[0] != "generate")
             throw new CliArgumentException(
-                $"Okänt kommando: '{args[0]}'. Använd: dotnet run -- generate [flaggor]");
+                $"Okänt kommando: '{args[0]}'. Använd: dotnet buggernaut --help");
 
         var options = GetDefaults();
 
@@ -115,7 +127,14 @@ public static class CliArgumentParser
     private static void PrintHelp()
     {
         Printer.H2("Användning");
-        Printer.Line("buggernaut generate [flaggor]", indent: 1);
+        Printer.Line("dotnet buggernaut --help", indent: 1);
+        Printer.Line("dotnet buggernaut [generate] [flaggor]", indent: 1);
+        Printer.Line("dotnet buggernaut <hint|explain> <ClassName>", indent: 1);
+
+        Printer.H2("Kommandon");
+        Printer.Flag("generate",                    "Generera en ny övning (standardkommandot)");
+        Printer.Flag("hint <ClassName>",            "Visa ledtråd för en genererad övning");
+        Printer.Flag("explain <ClassName>",         "Visa förklaring för en genererad övning");
 
         Printer.H2("Flaggor");
         Printer.Flag("--category, -c <category>",    "Typ av övning");
@@ -131,16 +150,17 @@ public static class CliArgumentParser
         Printer.Line(string.Join("  |  ", Enum.GetNames(typeof(Difficulties))), indent: 1);
 
         Printer.H2("Exempel");
-        Printer.Dim("buggernaut generate", indent: 1);
-        Printer.Dim("buggernaut generate --category Bug --difficulty Hard", indent: 1);
-        Printer.Dim("buggernaut generate -c LINQ -d Easy", indent: 1);
-        Printer.Dim("buggernaut generate --dry-run", indent: 1);
-        Printer.Dim("buggernaut generate --list", indent: 1);
+        Printer.Dim("dotnet buggernaut --help", indent: 1);
+        Printer.Dim("dotnet buggernaut", indent: 1);
+        Printer.Dim("dotnet buggernaut generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Dim("dotnet buggernaut generate -c LINQ -d Easy", indent: 1);
+        Printer.Dim("dotnet buggernaut generate --dry-run", indent: 1);
+        Printer.Dim("dotnet buggernaut generate --list", indent: 1);
 
         Printer.H2("Kör dina övningar");
         Printer.Dim("dotnet test exercises.slnf", indent: 1);
-        Printer.Dim("buggernaut hint    <ClassName>", indent: 1);
-        Printer.Dim("buggernaut explain <ClassName>", indent: 1);
+        Printer.Dim("dotnet buggernaut hint    <ClassName>", indent: 1);
+        Printer.Dim("dotnet buggernaut explain <ClassName>", indent: 1);
         Printer.Blank();
     }
 
@@ -156,8 +176,8 @@ public static class CliArgumentParser
             Printer.Line($"  {name}");
 
         Printer.H2("Exempel");
-        Printer.Dim("buggernaut generate --category Bug --difficulty Hard", indent: 1);
-        Printer.Dim("buggernaut generate -c LINQ -d Easy", indent: 1);
+        Printer.Dim("dotnet buggernaut generate --category Bug --difficulty Hard", indent: 1);
+        Printer.Dim("dotnet buggernaut generate -c LINQ -d Easy", indent: 1);
         Printer.Blank();
     }
 }

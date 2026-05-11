@@ -41,7 +41,7 @@ public static class MetaReader
         if (!File.Exists(metaPath))
         {
             Printer.Error($"Ingen meta-fil hittades för \"{className}\".");
-            Printer.Dim($"Tänk på att generera övningen med: dotnet run -- generate", indent: 1);
+            Printer.Dim($"Tänk på att generera övningen med: dotnet buggernaut generate", indent: 1);
             return null;
         }
 

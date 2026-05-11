@@ -37,8 +37,8 @@ public class ExerciseScaffolder
         Printer.KeyValue("Lösning",   $"solutions/{className}.cs");
         Printer.Blank();
         Printer.Dim($"Kör testerna:  dotnet test exercises.slnf  (från Buggernaut/)", indent: 1);
-        Printer.Dim($"Ledtråd:       buggernaut hint {className}", indent: 1);
-        Printer.Dim($"Förklaring:    buggernaut explain {className}", indent: 1);
+        Printer.Dim($"Ledtråd:       dotnet buggernaut hint {className}", indent: 1);
+        Printer.Dim($"Förklaring:    dotnet buggernaut explain {className}", indent: 1);
     }
 
     private static string BuildDescriptionHeader(string title, string description, string className)
@@ -58,8 +58,8 @@ public class ExerciseScaffolder
 
         lines.Add("//");
         lines.Add($"//  Testerna:    cd Buggernaut && dotnet test exercises.slnf");
-        lines.Add($"//  Ledtråd:     buggernaut hint {className}");
-        lines.Add($"//  Förklaring:  buggernaut explain {className}");
+        lines.Add($"//  Ledtråd:     dotnet buggernaut hint {className}");
+        lines.Add($"//  Förklaring:  dotnet buggernaut explain {className}");
         lines.Add(border);
         lines.Add("");
 

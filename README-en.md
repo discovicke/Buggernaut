@@ -127,7 +127,7 @@ dotnet buggernaut explain <ClassName>              # get explanation when tests 
 > **Tip:** See all flags and categories with:
 >
 >```bash
-> dotnet buggernaut generate --help
+> dotnet buggernaut --help
 >```
 
 ![CLI help for the generate command](docs/assets/BuggernautHelp.png)

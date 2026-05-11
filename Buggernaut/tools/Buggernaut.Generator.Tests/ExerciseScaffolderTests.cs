@@ -185,7 +185,7 @@ public class ExerciseScaffolderTests : IDisposable
             Path.Combine(_tempRoot, "src", "Buggernaut.Exercises", "Calculator.cs"));
         Assert.Contains("Test challenge", content); // title från MakeChallenge()
         Assert.Contains("A test.", content);        // description från MakeChallenge()
-        Assert.Contains("buggernaut hint Calculator", content);
+        Assert.Contains("dotnet buggernaut hint Calculator", content);
     }
 }
 

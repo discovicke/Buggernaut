@@ -77,6 +77,15 @@ public class CliArgumentParserTests : IDisposable
     }
 
     [Fact]
+    public void Parse_TopLevelHelpFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["--help"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
     public void Parse_ShortHelpFlag_ThrowsNonErrorException()
     {
         var ex = Assert.Throws<CliArgumentException>(
@@ -86,10 +95,46 @@ public class CliArgumentParserTests : IDisposable
     }
 
     [Fact]
+    public void Parse_TopLevelShortHelpFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["-h"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
     public void Parse_ListFlag_ThrowsNonErrorException()
     {
         var ex = Assert.Throws<CliArgumentException>(
             () => CliArgumentParser.Parse(["generate", "--list"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_TopLevelListFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["--list"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_ShortListFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["generate", "-l"]));
+
+        Assert.False(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_TopLevelShortListFlag_ThrowsNonErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["-l"]));
 
         Assert.False(ex.IsError);
     }
@@ -151,4 +196,3 @@ public class CliArgumentParserTests : IDisposable
         Assert.Contains("Extreme", ex.Message);
     }
 }
-
