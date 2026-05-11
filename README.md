@@ -1,10 +1,89 @@
 # Buggernaut
 
-### Guide
-##### API-nyckel till LLM
-1. I `appsettings.json` finns en lista över LLM-providers och deras modeller. Vill du specificera ytterligare vilken motor du vill använda dig av så ändrar du namnet i den filen.  
-2. Sedan kör `dotnet user-secrets set "{din-LLM-provider}:ApiKey" "din-nyckel"` innan du startar generatorn för att spara din API-nyckel till programmet.   
-> Exempel:  
-> - `dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"`  
-> - `dotnet user-secrets set "LLM:OpenAI:ApiKey" "din-nyckel"`  
-> - `dotnet user-secrets set "LLM:Mistral:ApiKey" "din-nyckel"`  
+Buggernaut är ett CLI-verktyg som genererar C#-övningar med buggar med hjälp av en valfri LLM-provider.
+
+---
+
+## Konfiguration
+
+### 1. Välj provider
+
+Öppna `tools/Buggernaut.Generator/appsettings.json` och sätt `Provider` till den tjänst du vill använda.
+
+```json
+{
+  "LLM": {
+    "Provider": "Gemini"
+  }
+}
+```
+
+Tillgängliga providers: `Gemini`, `OpenAI`, `Mistral`, `Ollama`
+
+---
+
+### 2. Välj modell (valfritt)
+
+Varje provider har en förinställd standardmodell. Du kan byta modell under respektive providers nyckel i `appsettings.json`:
+
+```json
+{
+  "LLM": {
+    "Provider": "Gemini",
+    "Gemini": {
+      "Model": "gemini-2.5-flash"
+    },
+    "OpenAI": {
+      "Model": "gpt-4o-mini"
+    },
+    "Mistral": {
+      "Model": "mistral-small"
+    },
+    "Ollama": {
+      "BaseUrl": "http://localhost:11434/v1",
+      "Model": "llama3"
+    }
+  }
+}
+```
+
+> **Ollama** kräver ingen API-nyckel men den behöver en lokal server igång. Ändra `BaseUrl` om din server lyssnar på en annan adress.
+
+---
+
+### 3. Ange API-nyckel
+
+API-nycklar sparas **aldrig** i `appsettings.json`. Använd istället `dotnet user-secrets` så lagras nyckeln säkert på din dator utanför källkoden.
+
+Kör kommandot för din valda provider från `tools/Buggernaut.Generator/`-mappen:
+
+```bash
+# Gemini
+dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
+
+# OpenAI
+dotnet user-secrets set "LLM:OpenAI:ApiKey" "din-nyckel"
+
+# Mistral
+dotnet user-secrets set "LLM:Mistral:ApiKey" "din-nyckel"
+```
+
+> Var hittar jag min API-nyckel?
+> - **Gemini** > [aistudio.google.com](https://aistudio.google.com/app/apikey)
+> - **OpenAI** > [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+> - **Mistral** > [console.mistral.ai](https://console.mistral.ai/)
+
+---
+
+### Snabbstart – exempel med Gemini
+
+```bash
+# 1. Gå till generator-mappen
+cd tools/Buggernaut.Generator
+
+# 2. Spara din API-nyckel
+dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
+
+# 3. Starta generatorn
+dotnet run
+```
