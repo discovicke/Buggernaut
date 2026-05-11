@@ -1,36 +1,79 @@
 # Buggernaut
 
-Buggernaut är ett CLI-verktyg som genererar C#-övningar med buggar med hjälp av en valfri LLM-provider.
+Buggernaut är ett CLI-verktyg som genererar C#-övningar med buggar med hjälp av en valfri LLM-provider. Det är designat för att hjälpa utvecklare att träna på att hitta och fixa buggar i kod, samt att förbättra sin förståelse av olika programmeringskoncept utan att behöva lämna sin egna egna utvecklingsmiljö.
 
-#### Inspiration
-Inspiration från och tack till [ThePrimeagen's Kata-Machine](https://github.com/ThePrimeagen/kata-machine) samt alla samtal med [Marcus Lööf](https://github.com/LeafMaster1) kring studietekniker och programmering.
+> Buggernauts grundkoncept är inspirerat av [ThePrimeagens Kata-Machine](https://github.com/ThePrimeagen/kata-machine). Tack till ytterligare inspiration från idésprutan [Marcus Lööf](https://github.com/LeafMaster1) som agerat bollplank och samtalat kring progammeringsprojekt och studietekniker.
 
 ---
 
-## Kör testerna
+## Förutsättningar
 
-Buggernaut innehåller två typer av tester som hålls separata med solution-filter:
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) installerat
+- En API-nyckel från valfri LLM-provider (se nedan)
 
-| Kommando | Vad körs                                      |
-|---|-----------------------------------------------|
-| `dotnet test exercises.slnf` | **Dina övningar** - enbart `Buggernaut.Tests` |
-| `dotnet test generator.slnf` | Generatorns egna enhetstester                 |
-| `dotnet test` | Allt - båda testprojekten                     |
+---
 
-> Kör alltid från `Buggernaut/`-mappen.
+## Kom igång
 
+Allt körs från `Buggernaut/`-mappen.
+
+### 1. Installera verktyget
 ```bash
 cd Buggernaut
-dotnet test exercises.slnf
+dotnet tool restore
 ```
+
+### 2. Ange API-nyckel (en gång)
+
+Kör från `tools/Buggernaut.Generator/` för att spara din nyckel:
+```bash
+cd tools/Buggernaut.Generator
+
+# Välj din provider:
+dotnet user-secrets set "LLM:Gemini:ApiKey"    "din-nyckel"
+dotnet user-secrets set "LLM:OpenAI:ApiKey"    "din-nyckel"
+dotnet user-secrets set "LLM:Anthropic:ApiKey" "din-nyckel"
+dotnet user-secrets set "LLM:Mistral:ApiKey"   "din-nyckel"
+```
+
+> Var hittar jag min API-nyckel?
+> - **Gemini** → [aistudio.google.com](https://aistudio.google.com/app/apikey)
+> - **OpenAI** → [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+> - **Anthropic** → [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys)
+> - **Mistral** → [console.mistral.ai](https://console.mistral.ai/)
+
+### 3. Generera en övning
+```bash
+cd Buggernaut
+dotnet buggernaut generate
+```
+
+---
+
+## Daglig användning
+
+Allt från `Buggernaut/`-mappen:
+
+```bash
+dotnet buggernaut generate                         # generera ny övning
+dotnet buggernaut generate -c LINQ -d Hard         # välj kategori och svårighetsgrad
+dotnet buggernaut generate --dry-run               # testa utan API-nyckel
+
+dotnet test exercises.slnf                         # kör dina övningstester
+
+dotnet buggernaut hint    <ClassName>              # ledtråd när du kört fast
+dotnet buggernaut explain <ClassName>              # förklaring när testerna är gröna
+```
+
+> **Tips:** `dotnet buggernaut generate --help` visar alla tillgängliga flaggor, kategorier och svårighetsgrader.
 
 ---
 
 ## Konfiguration
 
-### 1. Välj provider
+### Välj provider
 
-Öppna `tools/Buggernaut.Generator/appsettings.json` och sätt `Provider` till den tjänst du vill använda.
+Öppna `tools/Buggernaut.Generator/appsettings.json` och ändra `Provider`:
 
 ```json
 {
@@ -42,80 +85,31 @@ dotnet test exercises.slnf
 
 Tillgängliga providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`
 
----
-
-### 2. Välj modell (valfritt)
-
-Varje provider har en förinställd standardmodell. Du kan byta modell under respektive providers nyckel i `appsettings.json`:
+### Välj modell (valfritt)
 
 ```json
 {
   "LLM": {
     "Provider": "Gemini",
-    "Gemini": {
-      "Model": "gemini-2.5-flash"
-    },
-    "OpenAI": {
-      "Model": "gpt-4o-mini"
-    },
-    "Anthropic": {
-      "Model": "claude-3-5-haiku-latest"
-    },
-    "Mistral": {
-      "Model": "mistral-small"
-    },
-    "Ollama": {
-      "BaseUrl": "http://localhost:11434/v1",
-      "Model": "llama3"
-    }
+    "Gemini":    { "Model": "gemini-2.5-flash" },
+    "OpenAI":    { "Model": "gpt-4o-mini" },
+    "Anthropic": { "Model": "claude-3-5-haiku-latest" },
+    "Mistral":   { "Model": "mistral-small" },
+    "Ollama":    { "BaseUrl": "http://localhost:11434/v1", "Model": "llama3" }
   }
 }
 ```
 
-> **Ollama** kräver ingen API-nyckel men den behöver en lokal server igång. Ändra `BaseUrl` om din server lyssnar på en annan adress.
+> **Ollama** kräver ingen API-nyckel men behöver en lokal server igång.
 
 ---
 
-### 3. Ange API-nyckel
+## Kör testerna
 
-API-nycklar sparas **aldrig** i `appsettings.json`. Använd istället `dotnet user-secrets` så lagras nyckeln säkert på din dator utanför källkoden.
+| Kommando | Vad körs |
+|---|---|
+| `dotnet test exercises.slnf` | **Dina övningar** — enbart `Buggernaut.Tests` |
+| `dotnet test generator.slnf` | Generatorns egna enhetstester |
+| `dotnet test` | Allt |
 
-Kör kommandot för din valda provider från `tools/Buggernaut.Generator/`-mappen:
-
-```bash
-# Gemini
-dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
-
-# OpenAI
-dotnet user-secrets set "LLM:OpenAI:ApiKey" "din-nyckel"
-
-# Anthropic
-dotnet user-secrets set "LLM:Anthropic:ApiKey" "din-nyckel"
-
-# Mistral
-dotnet user-secrets set "LLM:Mistral:ApiKey" "din-nyckel"
-```
-
-> Var hittar jag min API-nyckel?
-> - **Gemini** → [aistudio.google.com](https://aistudio.google.com/app/apikey)
-> - **OpenAI** → [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-> - **Anthropic** → [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys)
-> - **Mistral** → [console.mistral.ai](https://console.mistral.ai/)
-
----
-
-### Snabbstart – exempel med Gemini
-
-```bash
-# 1. Gå till generator-mappen
-cd tools/Buggernaut.Generator
-
-# 2. Spara din API-nyckel
-dotnet user-secrets set "LLM:Gemini:ApiKey" "din-nyckel"
-
-# 3. Starta generatorn
-dotnet run
-```
-
-> **Tips:** Kör `dotnet run -- generate --help` för att snabbt se alla flaggor, kategorier och exempel direkt i terminalen utan att behöva öppna README:n.
-
+> Kör alltid från `Buggernaut/`-mappen.
