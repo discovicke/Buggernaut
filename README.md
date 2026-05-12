@@ -87,6 +87,7 @@ Har du en nyckel till en annan leverantör? Byt bara ut `Gemini`:
 dotnet user-secrets set "LLM:OpenAI:ApiKey"    "din-nyckel"
 dotnet user-secrets set "LLM:Anthropic:ApiKey" "din-nyckel"
 dotnet user-secrets set "LLM:Mistral:ApiKey"   "din-nyckel"
+dotnet user-secrets set "LLM:OpenRouter:ApiKey" "din-nyckel"
 ```
 
 Problem att hitta API-nyckeln till din leverantör? Kolla här:
@@ -95,6 +96,7 @@ Problem att hitta API-nyckeln till din leverantör? Kolla här:
 - **OpenAI**: <https://platform.openai.com/api-keys>
 - **Anthropic**: <https://console.anthropic.com/settings/keys>
 - **Mistral**: <https://console.mistral.ai/>
+- **OpenRouter**: <https://openrouter.ai/settings/keys>
 
 ### 3) Generera din första övning
 
@@ -145,7 +147,7 @@ dotnet buggernaut explain <ClassName>              # förklaring när testerna �
 }
 ```
 
-Tillgängliga providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`. 
+Tillgängliga providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`, `OpenRouter`. 
 > Saknar du en leverantör? [Skicka in förslag](https://github.com/discovicke/buggernaut/issues) till mig så löser vi det! :)
 
 Vill du köra lokalt utan internet? Sätt upp [Ollama](https://ollama.com) och byt till:
