@@ -32,6 +32,11 @@ public static class LlmClientFactory
                 config["LLM:Ollama:BaseUrl"] ?? "http://localhost:11434/v1",
                 "ollama",
                 config["LLM:Ollama:Model"] ?? "llama3"),
+            
+            "OpenRouter" => new OpenAiCompatibleClient(
+                config["LLM:OpenRouter:BaseUrl"] ?? "https://openrouter.ai/api/v1",
+                config["LLM:OpenRouter:ApiKey"]!,
+                config["LLM:OpenRouter:Model"] ?? "gpt-4o-mini"),
 
             _ => throw new Exception($"Okänd provider: {provider}")
         };
