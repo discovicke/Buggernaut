@@ -96,6 +96,7 @@ Need help finding your provider API key?
 - **OpenAI**: <https://platform.openai.com/api-keys>
 - **Anthropic**: <https://console.anthropic.com/settings/keys>
 - **Mistral**: <https://console.mistral.ai/>
+- **OpenRouter**: <https://openrouter.ai/settings/keys>
 
 ### 3) Generate your first exercise
 
@@ -148,7 +149,7 @@ Open `tools/Buggernaut.Generator/appsettings.json` and change `"Provider"`:
 }
 ```
 
-Available providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`.
+Available providers: `Gemini`, `OpenAI`, `Anthropic`, `Mistral`, `Ollama`, `OpenRouter`.
 > Missing a provider? [Open an issue](https://github.com/discovicke/buggernaut/issues) and suggest it.
 
 Want to run fully local without internet? Set up [Ollama](https://ollama.com) and use:
