@@ -14,7 +14,8 @@ internal static class ChallengeOrchestrator
             return;
         }
 
-        if (!ValidateApiKey(config)) return;
+        if (!ValidateApiKey(config)) 
+            return;
 
         Printer.H2($"Genererar  {options.Category}  ({options.Difficulty})");
 
@@ -52,6 +53,7 @@ internal static class ChallengeOrchestrator
             "Anthropic" => "LLM:Anthropic:ApiKey",
             "Mistral"   => "LLM:Mistral:ApiKey",
             "Ollama"    => null,
+            "OpenRouter" => "LLM:OpenRouter:ApiKey",
             _           => null
         };
 
