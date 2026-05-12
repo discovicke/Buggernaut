@@ -88,6 +88,7 @@ Using another provider? Just replace `Gemini`:
 dotnet user-secrets set "LLM:OpenAI:ApiKey" "your-key"
 dotnet user-secrets set "LLM:Anthropic:ApiKey" "your-key"
 dotnet user-secrets set "LLM:Mistral:ApiKey" "your-key"
+dotnet user-secrets set "LLM:OpenRouter:ApiKey" "your-key"
 ```
 
 Need help finding your provider API key?

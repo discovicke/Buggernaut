@@ -87,6 +87,7 @@ Har du en nyckel till en annan leverantör? Byt bara ut `Gemini`:
 dotnet user-secrets set "LLM:OpenAI:ApiKey"    "din-nyckel"
 dotnet user-secrets set "LLM:Anthropic:ApiKey" "din-nyckel"
 dotnet user-secrets set "LLM:Mistral:ApiKey"   "din-nyckel"
+dotnet user-secrets set "LLM:OpenRouter:ApiKey" "din-nyckel"
 ```
 
 Problem att hitta API-nyckeln till din leverantör? Kolla här:
