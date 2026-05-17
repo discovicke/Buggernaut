@@ -45,7 +45,7 @@ internal static class ChallengeOrchestrator
 
     private static bool ValidateApiKey(IConfiguration config)
     {
-        var provider = config["LLM:Provider"] ?? "Gemini";
+        var provider = LlmProviderResolver.Resolve(config["LLM:Provider"]);
         var apiKeyConfigPath = provider switch
         {
             "Gemini"    => "LLM:Gemini:ApiKey",

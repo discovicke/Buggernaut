@@ -6,7 +6,7 @@ public static class LlmClientFactory
 {
     public static ILlmClient Create(IConfiguration config)
     {
-        var provider = config["LLM:Provider"] ?? "Gemini";
+        var provider = LlmProviderResolver.Resolve(config["LLM:Provider"]);
 
         return provider switch
         {
