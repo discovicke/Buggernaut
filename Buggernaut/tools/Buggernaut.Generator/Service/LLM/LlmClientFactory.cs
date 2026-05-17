@@ -4,9 +4,19 @@ using Microsoft.Extensions.Configuration;
 
 public static class LlmClientFactory
 {
+    private static readonly string[] SupportedProviders =
+    [
+        "Gemini",
+        "OpenAI",
+        "Mistral",
+        "Anthropic",
+        "Ollama",
+        "OpenRouter"
+    ];
+
     public static ILlmClient Create(IConfiguration config)
     {
-        var provider = config["LLM:Provider"] ?? "Gemini";
+        var provider = ResolveProvider(config);
 
         return provider switch
         {
@@ -40,5 +50,15 @@ public static class LlmClientFactory
 
             _ => throw new Exception($"Okänd provider: {provider}")
         };
+    }
+
+    public static string ResolveProvider(IConfiguration config)
+    {
+        var provider = config["LLM:Provider"] ?? "Gemini";
+        return SupportedProviders.FirstOrDefault(
+            supportedProvider => string.Equals(
+                supportedProvider,
+                provider,
+                StringComparison.OrdinalIgnoreCase)) ?? provider;
     }
 }
