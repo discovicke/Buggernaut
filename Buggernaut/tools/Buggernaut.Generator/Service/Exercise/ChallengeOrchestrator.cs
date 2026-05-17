@@ -46,16 +46,26 @@ internal static class ChallengeOrchestrator
     private static bool ValidateApiKey(IConfiguration config)
     {
         var provider = config["LLM:Provider"] ?? "Gemini";
-        var apiKeyConfigPath = provider switch
+        string? apiKeyConfigPath = provider switch
         {
-            "Gemini"    => "LLM:Gemini:ApiKey",
-            "OpenAI"    => "LLM:OpenAI:ApiKey",
+            "Gemini" => "LLM:Gemini:ApiKey",
+            "OpenAI" => "LLM:OpenAI:ApiKey",
             "Anthropic" => "LLM:Anthropic:ApiKey",
-            "Mistral"   => "LLM:Mistral:ApiKey",
-            "Ollama"    => null,
+            "Mistral" => "LLM:Mistral:ApiKey",
+            "Ollama" => null,
             "OpenRouter" => "LLM:OpenRouter:ApiKey",
-            _           => null
+            _ => null,
         };
+
+        if (apiKeyConfigPath is null && !string.Equals(provider, "Ollama", StringComparison.OrdinalIgnoreCase))
+        {
+            Printer.Error($"Okänd LLM-provider: '{provider}'.");
+            Printer.Dim("Kontrollera värdet för LLM:Provider i appsettings.json.", indent: 1);
+            Printer.Dim(
+                "Giltiga värden: Gemini, OpenAI, Anthropic, Mistral, Ollama, OpenRouter.",
+                indent: 1);
+            return false;
+        }
 
         if (apiKeyConfigPath != null && string.IsNullOrEmpty(config[apiKeyConfigPath]))
         {
