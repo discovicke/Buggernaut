@@ -18,9 +18,11 @@ internal static class ChallengeOrchestrator
             return;
 
         Printer.H2($"Genererar  {options.Category}  ({options.Difficulty})");
+        if (!string.IsNullOrWhiteSpace(options.Topic))
+            Printer.Dim($"Fokus: {options.Topic}", indent: 1);
 
         var client = LlmClientFactory.Create(config);
-        var prompt = PromptBuilder.BuildUserPrompt(options.Category, options.Difficulty);
+        var prompt = PromptBuilder.BuildUserPrompt(options.Category, options.Difficulty, options.Topic);
         var challenge = await TryGenerateChallengeAsync(client, prompt);
 
         if (challenge is null)
@@ -31,7 +33,7 @@ internal static class ChallengeOrchestrator
         }
 
         Printer.Info("Genererar filer...", indent: 1);
-        new ExerciseScaffolder().Scaffold(challenge);
+        CreateScaffolder(options).Scaffold(challenge);
     }
 
     private static void RunDryRun(CliArgumentParser.GenerateOptions options)
@@ -40,8 +42,13 @@ internal static class ChallengeOrchestrator
         Printer.Info($"Genererar mock-övning  {options.Category}  ({options.Difficulty})");
         var mock = MockChallengeFactory.Create(options.Category, options.Difficulty);
         Printer.Ok($"Mock-övning klar: {mock.Title}");
-        new ExerciseScaffolder().Scaffold(mock);
+        CreateScaffolder(options).Scaffold(mock);
     }
+
+    private static ExerciseScaffolder CreateScaffolder(CliArgumentParser.GenerateOptions options) =>
+        string.IsNullOrWhiteSpace(options.OutputDirectory)
+            ? new ExerciseScaffolder()
+            : new ExerciseScaffolder(options.OutputDirectory);
 
     private static bool ValidateApiKey(IConfiguration config)
     {

@@ -195,4 +195,70 @@ public class CliArgumentParserTests : IDisposable
         Assert.True(ex.IsError);
         Assert.Contains("Extreme", ex.Message);
     }
+
+    [Fact]
+    public void Parse_LongTopicFlag_ParsesTopic()
+    {
+        var options = CliArgumentParser.Parse(["generate", "--topic", "Designmönster: Builder"]);
+
+        Assert.Equal("Designmönster: Builder", options.Topic);
+    }
+
+    [Fact]
+    public void Parse_ShortTopicFlag_ParsesTopic()
+    {
+        var options = CliArgumentParser.Parse(["generate", "-t", "LINQ GroupBy"]);
+
+        Assert.Equal("LINQ GroupBy", options.Topic);
+    }
+
+    [Fact]
+    public void Parse_NoTopicFlag_TopicDefaultsToEmpty()
+    {
+        var options = CliArgumentParser.Parse(["generate", "-c", "Bug"]);
+
+        Assert.Equal("", options.Topic);
+    }
+
+    [Fact]
+    public void Parse_TopicFlagWithoutValue_ThrowsErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["generate", "--topic"]));
+
+        Assert.True(ex.IsError);
+    }
+
+    [Fact]
+    public void Parse_LongOutputFlag_ParsesOutputDirectory()
+    {
+        var options = CliArgumentParser.Parse(["generate", "--output", "./exercises"]);
+
+        Assert.Equal("./exercises", options.OutputDirectory);
+    }
+
+    [Fact]
+    public void Parse_ShortOutputFlag_ParsesOutputDirectory()
+    {
+        var options = CliArgumentParser.Parse(["generate", "-o", "./exercises"]);
+
+        Assert.Equal("./exercises", options.OutputDirectory);
+    }
+
+    [Fact]
+    public void Parse_NoOutputFlag_OutputDirectoryDefaultsToEmpty()
+    {
+        var options = CliArgumentParser.Parse(["generate", "-c", "Bug"]);
+
+        Assert.Equal("", options.OutputDirectory);
+    }
+
+    [Fact]
+    public void Parse_OutputFlagWithoutValue_ThrowsErrorException()
+    {
+        var ex = Assert.Throws<CliArgumentException>(
+            () => CliArgumentParser.Parse(["generate", "--output"]));
+
+        Assert.True(ex.IsError);
+    }
 }

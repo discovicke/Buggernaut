@@ -64,5 +64,29 @@ public class PromptBuilderTests
 
         Assert.NotEqual(bugPrompt, linqPrompt);
     }
+
+    [Fact]
+    public void BuildUserPrompt_WithTopic_IncludesTopicInPrompt()
+    {
+        var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.General, Difficulties.Medium, "Fluent interface");
+
+        Assert.Contains("Fluent interface", prompt);
+    }
+
+    [Fact]
+    public void BuildUserPrompt_WithoutTopic_OmitsFocusSentence()
+    {
+        var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.General, Difficulties.Medium);
+
+        Assert.DoesNotContain("Focus the challenge", prompt);
+    }
+
+    [Fact]
+    public void BuildUserPrompt_EmptyTopic_OmitsFocusSentence()
+    {
+        var prompt = PromptBuilder.BuildUserPrompt(ChallengeCategories.General, Difficulties.Medium, "   ");
+
+        Assert.DoesNotContain("Focus the challenge", prompt);
+    }
 }
 
