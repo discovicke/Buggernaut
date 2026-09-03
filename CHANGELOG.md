@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+---
+
+## [v1.0.3] - 2026-09-03
+
 ### Added
 - `generate --topic/-t <text>`: fokusområde som vävs in i AI-prompten (valfritt, bakåtkompatibelt)
 - `generate --output/-o <mapp>`: målmapp för genererade filer (valfritt, standard: solution-rooten)
