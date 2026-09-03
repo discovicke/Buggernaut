@@ -12,6 +12,8 @@ public static class CliArgumentParser
         public string TargetClassName { get; set; } = "";
         public ChallengeCategories Category { get; set; } = ChallengeCategories.Bug;
         public Difficulties Difficulty { get; set; } = Difficulties.Medium;
+        public string Topic { get; set; } = "";
+        public string OutputDirectory { get; set; } = "";
         public bool DryRun { get; set; } = false;
     }
 
@@ -20,31 +22,31 @@ public static class CliArgumentParser
         if (args.Length == 0)
             return GetDefaults();
 
-        if (args[0] == "--help" || args[0] == "-h")
+        switch (args[0])
         {
-            PrintHelp();
-            throw new CliArgumentException("Visat hjälp.", isError: false);
-        }
-
-        if (args[0] == "--list" || args[0] == "-l")
-        {
-            PrintList();
-            throw new CliArgumentException("Visade lista.", isError: false);
-        }
-
-        if (args[0] == "hint" || args[0] == "explain")
-        {
-            if (args.Length < 2)
-                throw new CliArgumentException(
-                    $"{args[0]} kräver ett klassnamn. Exempel: dotnet buggernaut {args[0]} OrderValidator");
-
-            return new GenerateOptions
+            case "--help":
+            case "-h":
+                PrintHelp();
+                throw new CliArgumentException("Visat hjälp.", isError: false);
+            case "--list":
+            case "-l":
+                PrintList();
+                throw new CliArgumentException("Visade lista.", isError: false);
+            case "hint":
+            case "explain":
             {
-                Command = args[0] == "hint" 
-                    ? Command.Hint 
-                    : Command.Explain,
-                TargetClassName = args[1]
-            };
+                if (args.Length < 2)
+                    throw new CliArgumentException(
+                        $"{args[0]} kräver ett klassnamn. Exempel: dotnet buggernaut {args[0]} OrderValidator");
+
+                return new GenerateOptions
+                {
+                    Command = args[0] == "hint" 
+                        ? Command.Hint 
+                        : Command.Explain,
+                    TargetClassName = args[1]
+                };
+            }
         }
 
         if (args[0] != "generate")
@@ -55,40 +57,61 @@ public static class CliArgumentParser
 
         for (int i = 1; i < args.Length; i++)
         {
-            if (args[i] == "--category" || args[i] == "-c")
+            switch (args[i])
             {
-                if (i + 1 >= args.Length)
-                    throw new CliArgumentException("--category kräver ett värde. Exempel: --category Bug");
+                case "--category":
+                case "-c":
+                {
+                    if (i + 1 >= args.Length)
+                        throw new CliArgumentException("--category kräver ett värde. Exempel: --category Bug");
 
-                var categoryValue = args[++i];
-                options.Category = ParseCategory(categoryValue);
-            }
-            else if (args[i] == "--difficulty" || args[i] == "-d")
-            {
-                if (i + 1 >= args.Length)
-                    throw new CliArgumentException("--difficulty kräver ett värde. Exempel: --difficulty Hard");
+                    var categoryValue = args[++i];
+                    options.Category = ParseCategory(categoryValue);
+                    break;
+                }
+                case "--difficulty":
+                case "-d":
+                {
+                    if (i + 1 >= args.Length)
+                        throw new CliArgumentException("--difficulty kräver ett värde. Exempel: --difficulty Hard");
 
-                var difficultyValue = args[++i];
-                options.Difficulty = ParseDifficulty(difficultyValue);
-            }
-            else if (args[i] == "--dry-run" || args[i] == "-dr")
-            {
-                options.DryRun = true;
-            }
-            else if (args[i] == "--list" || args[i] == "-l")
-            {
-                PrintList();
-                throw new CliArgumentException("Visade lista.", isError: false);
-            }
-            else if (args[i] == "--help" || args[i] == "-h")
-            {
-                PrintHelp();
-                throw new CliArgumentException("Visat hjälp.", isError: false);
-            }
-            else
-            {
-                throw new CliArgumentException(
-                    $"Okänd flagga: '{args[i]}'. Använd --help för att se tillgängliga flaggor.");
+                    var difficultyValue = args[++i];
+                    options.Difficulty = ParseDifficulty(difficultyValue);
+                    break;
+                }
+                case "--dry-run":
+                case "-dr":
+                    options.DryRun = true;
+                    break;
+                case "--topic":
+                case "-t":
+                {
+                    if (i + 1 >= args.Length)
+                        throw new CliArgumentException("--topic kräver ett värde. Exempel: --topic \"Designmönster: Builder\"");
+
+                    options.Topic = args[++i];
+                    break;
+                }
+                case "--output":
+                case "-o":
+                {
+                    if (i + 1 >= args.Length)
+                        throw new CliArgumentException("--output kräver ett värde. Exempel: --output ./exercises");
+
+                    options.OutputDirectory = args[++i];
+                    break;
+                }
+                case "--list":
+                case "-l":
+                    PrintList();
+                    throw new CliArgumentException("Visade lista.", isError: false);
+                case "--help":
+                case "-h":
+                    PrintHelp();
+                    throw new CliArgumentException("Visat hjälp.", isError: false);
+                default:
+                    throw new CliArgumentException(
+                        $"Okänd flagga: '{args[i]}'. Använd --help för att se tillgängliga flaggor.");
             }
         }
 
@@ -139,6 +162,8 @@ public static class CliArgumentParser
         Printer.H2("Flaggor");
         Printer.Flag("--category, -c <category>",    "Typ av övning");
         Printer.Flag("--difficulty, -d <difficulty>", "Svårighetsgrad  (standard: Medium)");
+        Printer.Flag("--topic, -t <text>",            "Fokusområde — vävs in i AI-prompten (valfritt)");
+        Printer.Flag("--output, -o <mapp>",           "Målmapp för genererade filer (valfritt, standard: solution-rooten)");
         Printer.Flag("--dry-run, -dr",               "Lokal mock-övning, ingen API-nyckel krävs");
         Printer.Flag("--list, -l",                   "Visa tillgängliga kategorier och svårighetsgrader");
         Printer.Flag("--help, -h",                   "Visa denna hjälptext");
@@ -153,7 +178,7 @@ public static class CliArgumentParser
         Printer.Dim("dotnet buggernaut --help", indent: 1);
         Printer.Dim("dotnet buggernaut", indent: 1);
         Printer.Dim("dotnet buggernaut generate --category Bug --difficulty Hard", indent: 1);
-        Printer.Dim("dotnet buggernaut generate -c LINQ -d Easy", indent: 1);
+        Printer.Dim("dotnet buggernaut generate -c LINQ -d Easy -t \"LINQ GroupBy\" -o ./exercises", indent: 1);
         Printer.Dim("dotnet buggernaut generate --dry-run", indent: 1);
         Printer.Dim("dotnet buggernaut generate --list", indent: 1);
 

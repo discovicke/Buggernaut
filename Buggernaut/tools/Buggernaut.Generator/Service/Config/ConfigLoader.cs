@@ -12,6 +12,7 @@ internal static class ConfigLoader
         return new ConfigurationBuilder()
             .AddJsonFile(appSettingsPath, optional: true)
             .AddUserSecrets(typeof(ConfigLoader).Assembly)
+            .AddEnvironmentVariables()
             .Build();
     }
 }

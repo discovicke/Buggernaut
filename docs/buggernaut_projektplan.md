@@ -110,39 +110,3 @@ Bra att ha dessa som valbara:
 **Håll namespace-konventionen konsekvent**, annars hittar inte testprojektet klassen. Skicka med namespace i prompten.
 
 **`.gitignore` solutions-mappen** om jag vill att det ska vara "ärligt". Eller ge en `--reveal`-flagga som skriver ut lösningen i terminalen.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

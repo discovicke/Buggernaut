@@ -37,7 +37,7 @@ public class PromptBuilder
          - Every public method in buggyCode and solutionCode MUST have an XML /// <summary> with /// <param> and /// <returns> tags where applicable.
          """;
     
-    public static string BuildUserPrompt(ChallengeCategories category, Difficulties difficulty)
+    public static string BuildUserPrompt(ChallengeCategories category, Difficulties difficulty, string topic = "")
     {
         var categoryDescription = category switch
         {
@@ -51,7 +51,12 @@ public class PromptBuilder
             ChallengeCategories.General         => "a general C# challenge",
             _                                   => "a general C# challenge"
         };
-        
-        return $"Generate a C# challenge for {difficulty} difficulty. The challenge should be {categoryDescription}.";
+
+        var prompt = $"Generate a C# challenge for {difficulty} difficulty. The challenge should be {categoryDescription}.";
+
+        if (!string.IsNullOrWhiteSpace(topic))
+            prompt += $" Focus the challenge on the following topic:\n{topic.Trim()}";
+
+        return prompt;
     }
 }
